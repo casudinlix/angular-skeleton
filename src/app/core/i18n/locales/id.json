@@ -74,5 +74,12 @@
   "workspaceEyebrow": "RUANG KERJA AMAN",
   "customersEyebrow": "MODUL / PELANGGAN",
   "loadingLabel": "Memuat...",
-  "recoveryFailed": "Koneksi ke server belum pulih. Coba kembali."
+  "recoveryFailed": "Koneksi ke server belum pulih. Coba kembali.",
+  "navGroupWorkspace": "RUANG KERJA",
+  "consoleCaption": "KONSOL ENTERPRISE",
+  "toolbarStack": "ANGULAR 22 • BUN • TAILWIND 4",
+  "closeMenu": "Tutup menu navigasi",
+  "footerFoundation": "Fondasi aplikasi lintas produk",
+  "foundationCard": "Fondasi",
+  "styleDirection": "Sistem antarmuka operasional"
 }

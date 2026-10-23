@@ -74,5 +74,12 @@
   "workspaceEyebrow": "SECURE WORKSPACE",
   "customersEyebrow": "FEATURE / CUSTOMERS",
   "loadingLabel": "Loading...",
-  "recoveryFailed": "The server is still unavailable. Please try again."
+  "recoveryFailed": "The server is still unavailable. Please try again.",
+  "navGroupWorkspace": "WORKSPACE",
+  "consoleCaption": "ENTERPRISE CONSOLE",
+  "toolbarStack": "ANGULAR 22 • BUN • TAILWIND 4",
+  "closeMenu": "Close navigation menu",
+  "footerFoundation": "Cross-product application foundation",
+  "foundationCard": "Foundation",
+  "styleDirection": "Operations interface system"
 }

@@ -1,13 +1,28 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --color-brand-50: #edfdf7; --color-brand-100: #d1fae9; --color-brand-200: #a6f4d4;
-  --color-brand-500: #12b886; --color-brand-600: #0d986e; --color-brand-700: #087b5a;
-  --color-brand-800: #075c48; --color-brand-900: #064a3a;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Paper / operations-console semantic palette. See docs/PAPER_VISUAL_SYSTEM.md. */
+  --color-brand-50: #ecfeff;
+  --color-brand-100: #cffafe;
+  --color-brand-200: #a5f3fc;
+  --color-brand-300: #67e8f9;
+  --color-brand-400: #22d3ee;
+  --color-brand-500: #06b6d4;
+  --color-brand-600: #0891b2;
+  --color-brand-700: #0e7490;
+  --color-brand-800: #155e75;
+  --color-brand-900: #164e63;
+
+  --color-console-950: #030712;
+  --color-console-900: #0b1220;
+  --color-console-850: #101827;
+  --color-console-800: #1e293b;
 }
 
-/* Design in CSS pixels and rem. Device pixel ratio is NOT a layout breakpoint. */
 :root {
   font-family: var(--font-sans);
   font-synthesis: none;
@@ -19,11 +34,36 @@
 body { margin: 0; min-width: 0; }
 app-root { display: block; min-width: 0; }
 button, select, input, textarea { font: inherit; }
+code, kbd, samp, pre, .app-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 img, svg, video, canvas { max-width: 100%; }
 img { height: auto; }
-:focus-visible { outline: 3px solid #10b981; outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 3px; }
 
-/* Legacy viewport fallback first, then stable mobile viewport units. No fixed page height. */
+/* Shared, reusable surfaces: one treatment for dashboard, CRUD and auth. */
+.app-panel {
+  min-width: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: .75rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / .03);
+}
+.dark .app-panel {
+  border-color: #1e293b;
+  background: #111827;
+  box-shadow: none;
+}
+.app-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .6875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.app-divider { border-color: #e2e8f0; }
+.dark .app-divider { border-color: #1e293b; }
+
+/* CSS-pixel viewports, never device-pixel-ratio breakpoints. */
 .app-viewport { min-height: 100vh; }
 @supports (min-height: 100svh) {
   .app-viewport { min-height: 100svh; }
@@ -51,27 +91,39 @@ img { height: auto; }
 .app-main { padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); }
 .app-break-anywhere { overflow-wrap: anywhere; word-break: normal; }
 
-/* iOS Safari: inputs smaller than 16px zoom the page on focus. */
+/* Quiet but visible scrollbars, with Firefox fallback. */
+.app-scroll-region, .app-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: #64748b transparent;
+}
+.dark .app-scroll-region, .dark .app-sidebar {
+  scrollbar-color: #334155 #0b1220;
+}
+.app-scroll-region::-webkit-scrollbar, .app-sidebar::-webkit-scrollbar { width: 7px; height: 7px; }
+.app-scroll-region::-webkit-scrollbar-thumb, .app-sidebar::-webkit-scrollbar-thumb { background: #64748b; border-radius: 7px; }
+.dark .app-scroll-region::-webkit-scrollbar-thumb, .dark .app-sidebar::-webkit-scrollbar-thumb { background: #334155; }
+
+/* Safari mobile avoids involuntary input-focus zoom with 16px controls. */
 @media (max-width: 63.999rem) {
   .app-mobile-nav-closed { display: none; }
   input, select, textarea { font-size: 1rem; }
 }
 @media (min-width: 64rem) {
-  .app-sidebar { max-height: 100vh; }
+  .app-sidebar { max-height: calc(100vh - 4.25rem); }
   @supports (height: 100dvh) {
-    .app-sidebar { max-height: 100dvh; }
+    .app-sidebar { max-height: calc(100dvh - 4.25rem); }
   }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
+    animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: .01ms !important;
   }
 }
 @media print {
-  .app-sidebar, .app-toolbar { display: none !important; }
+  .app-sidebar, .app-toolbar, .app-mobile-overlay { display: none !important; }
   .app-viewport, .app-content { display: block; min-height: 0; }
   .app-scroll-region { overflow: visible; }
 }
