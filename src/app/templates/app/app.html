@@ -1,20 +1,56 @@
-<header class="site-header">
-  <nav class="app-navigation" aria-label="Primary">
-    <a routerLink="/" class="app-brand">{{ i18n.translate('appName') }}</a>
-    <a routerLink="/customers">{{ i18n.translate('customersTitle') }}</a>
-  </nav>
+<div class="min-h-screen bg-slate-50 text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-50">
+  <a class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded-lg focus:bg-white focus:p-3" href="#main-content">Skip to content</a>
+  <div class="min-h-screen lg:grid lg:grid-cols-[256px_minmax(0,1fr)]">
+    <aside class="border-b border-slate-800 bg-slate-950 text-slate-50 lg:min-h-screen">
+      <div class="flex items-center justify-between px-6 py-5">
+        <a routerLink="/" (click)="closeMenu()" class="flex items-center gap-3 font-semibold tracking-tight">
+          <img width="36" height="36" src="/assets/branding/skeleton-mark.svg" alt="" />
+          <span>Angular <span class="text-brand-200">Skeleton</span></span>
+        </a>
+        <button type="button" class="rounded-lg border border-slate-700 px-3 py-2 lg:hidden"
+          [attr.aria-label]="i18n.translate('menu')" [attr.aria-expanded]="menuOpen()"
+          aria-controls="main-navigation" (click)="menuOpen.update(value => !value)">☰</button>
+      </div>
+      <nav id="main-navigation" [class.hidden]="!menuOpen()" class="flex flex-col gap-2 px-4 pb-6 lg:flex" [attr.aria-label]="i18n.translate('navigation')">
+        <a routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="bg-slate-800 text-white"
+          (click)="closeMenu()" class="rounded-lg px-4 py-3 text-sm text-slate-300 hover:bg-slate-800">
+          {{ i18n.translate('overview') }}
+        </a>
+        @if (auth.state().status === 'authenticated') {
+          <a routerLink="/customers" routerLinkActive="bg-slate-800 text-white" (click)="closeMenu()"
+            class="rounded-lg px-4 py-3 text-sm text-slate-300 hover:bg-slate-800">
+            {{ i18n.translate('customersTitle') }}
+          </a>
+        }
+      </nav>
+    </aside>
 
-  <div class="locale-picker">
-    <label for="app-language">{{ i18n.translate('language') }}</label>
-    <select
-      id="app-language"
-      #languageSelect
-      [value]="i18n.language()"
-      (change)="setLanguage(languageSelect.value)"
-    >
-      <option value="id">Bahasa Indonesia</option>
-      <option value="en">English</option>
-    </select>
+    <div class="min-w-0">
+      <header class="flex min-h-20 flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-4 dark:border-slate-800 dark:bg-slate-900 lg:px-10">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-brand-700 dark:text-brand-200">{{ i18n.translate('brand') }}</p>
+          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ i18n.translate('overview') }}</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <label for="app-language" class="sr-only">{{ i18n.translate('languageLabel') }}</label>
+          <select id="app-language" #languageSelect [value]="i18n.language()" (change)="setLanguage(languageSelect.value)"
+            class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white">
+            <option value="id">Indonesia</option><option value="en">English</option>
+          </select>
+          <button type="button" (click)="theme.toggle()" [attr.aria-label]="i18n.translate('toggleTheme')"
+            class="rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-700">
+            {{ theme.theme() === 'dark' ? '☀' : '☾' }}
+          </button>
+          @if (auth.state().status === 'authenticated') {
+            <span class="hidden max-w-32 truncate text-sm text-slate-500 sm:inline">{{ auth.identity?.displayName }}</span>
+            <button type="button" (click)="signOut()" class="rounded-lg px-3 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 dark:text-brand-200">{{ i18n.translate('logout') }}</button>
+          } @else {
+            <a routerLink="/login" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">{{ i18n.translate('loginSubmit') }}</a>
+          }
+        </div>
+      </header>
+      <main id="main-content" class="mx-auto max-w-7xl px-5 py-8 lg:px-10 lg:py-10"><router-outlet /></main>
+    </div>
   </div>
-</header>
-<router-outlet />
+  <ui-toast-container />
+</div>
