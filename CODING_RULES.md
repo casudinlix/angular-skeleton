@@ -48,3 +48,10 @@
 - Light mode must remain legible; CSS semantics must account for both light and dark. Honor saved preferences and test both.
 - Do not import Angular Material, chart libraries, React or billing runtime packages just to reproduce the reference aesthetic. New dependencies require a separate verified need.
 - Preserve all routes, HTTP contracts, permissions, forms and localized UI during restyles. Do not invent financial metrics or live network statuses.
+
+## Sample pages and local API demo
+
+- Regular `bun start` is an integration mode with a real backend; do not silently fall back to mock data or a fake authenticated identity.
+- Only `bun run demo` may launch the loopback-only, ephemeral local demo API. Label demo screens and never ship mock users or records in production.
+- Maintain the demo endpoints aligned to `openapi/openapi.json`; keep cookie/XSRF behavior representative while documenting that it is not a production authentication service.
+- Do not run or enable GitHub Actions. Local `bun run demo:test` is permitted for verification.

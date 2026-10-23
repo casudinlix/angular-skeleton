@@ -33,3 +33,7 @@ Read `docs/HARDENING.md` and `openapi/openapi.json` before changing API/auth/CRU
 ## Paper visual-system standard
 
 Read `docs/PAPER_VISUAL_SYSTEM.md` before adding new UI modules. Maintain the compact operations toolbar/sidebar, cyan `brand-*` theme, semantic `app-panel`/`app-eyebrow`, Plus Jakarta Sans and JetBrains Mono for technical values. Honor persisted light/dark preferences, mobile navigation, focus, reduced motion and table-local scrolling. Use the external HTML template convention and avoid copying unrelated business logic or dependencies from the design reference. Never show fabricated KPIs/system status. No CI/Actions.
+
+## Local-only sample API
+
+Angular `bun start` proxies `/api` to a real backend at 127.0.0.1:3000. `ECONNREFUSED` means no backend is listening, not an Angular compilation error. For UI samples without a backend, run `bun run demo` to launch the standalone local synthetic backend. Read `docs/LOCAL_DEMO.md`. Demo must remain opt-in, bound to loopback, clearly labelled and excluded from production build. Never silently bypass auth/permissions, substitute fake data into real product endpoints, or enable CI.
