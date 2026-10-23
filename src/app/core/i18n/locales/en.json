@@ -73,5 +73,6 @@
   "developerDescription": "External HTML templates, ID/EN JSON, and repeatable feature generation.",
   "workspaceEyebrow": "SECURE WORKSPACE",
   "customersEyebrow": "FEATURE / CUSTOMERS",
-  "loadingLabel": "Loading..."
+  "loadingLabel": "Loading...",
+  "recoveryFailed": "The server is still unavailable. Please try again."
 }

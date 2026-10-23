@@ -2,8 +2,18 @@
   <div class="mx-auto flex size-16 items-center justify-center rounded-2xl bg-brand-50 text-3xl text-brand-700 dark:bg-slate-800">◇</div>
   <p class="mt-6 text-sm font-bold uppercase tracking-widest text-brand-700 dark:text-brand-200">{{ status }}</p>
   <h1 class="mt-2 text-2xl font-bold">{{ i18n.translate(messageKey) }}</h1>
+  @if (failed()) {
+    <p class="mt-4 text-sm text-red-700 dark:text-red-300" role="status">{{ i18n.translate('recoveryFailed') }}</p>
+  }
   <div class="mt-7 flex flex-wrap justify-center gap-3">
-    <a uiButton="primary" routerLink="/">{{ i18n.translate('backToHome') }}</a>
-    @if (status === '401') { <a uiButton="secondary" routerLink="/login">{{ i18n.translate('unauthorizedLink') }}</a> }
+    <a uiButton="secondary" routerLink="/">{{ i18n.translate('backToHome') }}</a>
+    @if (status === '401') {
+      <a uiButton="primary" routerLink="/login">{{ i18n.translate('unauthorizedLink') }}</a>
+    }
+    @if (status === '500' || status === 'maintenance') {
+      <button uiButton="primary" type="button" [disabled]="busy()" (click)="retry()">
+        {{ busy() ? i18n.translate('loadingSession') : i18n.translate('retry') }}
+      </button>
+    }
   </div>
 </section>

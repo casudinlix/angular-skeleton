@@ -73,5 +73,6 @@
   "developerDescription": "Template HTML terpisah, JSON ID/EN, serta generator fitur konsisten.",
   "workspaceEyebrow": "RUANG KERJA AMAN",
   "customersEyebrow": "MODUL / PELANGGAN",
-  "loadingLabel": "Memuat..."
+  "loadingLabel": "Memuat...",
+  "recoveryFailed": "Koneksi ke server belum pulih. Coba kembali."
 }
