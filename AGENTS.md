@@ -25,3 +25,7 @@ Run `bun run layout:check` alongside structure, i18n, lint, unit tests, producti
 Canonical package manager: **Bun 1.4.4**. For installation use `bun install` (after lockfile migration: `bun install --frozen-lockfile`); for commands `bun run <script>`; for tooling `bunx`. Do not use npm, npx, pnpm or yarn. Keep Node.js as the Angular CLI runtime when required by Angular. `bunfig.toml` uses hoisted dependencies for compatibility.
 
 GitHub Actions is disabled by user request due to usage limits. Never add workflow triggers, enable CI, or dispatch tests to Actions. Do not attempt to fabricate `bun.lock`; complete migration only in a networked local Bun installation. Read `docs/CI_PAUSED.md` and `docs/TESTING.md`.
+
+## Reliability hardening
+
+Read `docs/HARDENING.md` and `openapi/openapi.json` before changing API/auth/CRUD. A protected HTTP 401 must invalidate the client session and redirect to login; 403 must not discard the session. Never let stale session probe responses override newer logins. Cancel obsolete searches, commit cursor history only on success, and retry known expired cursors at the first page once. Update OpenAPI and TypeScript DTOs together; run `bun run contract:check`. New forms should reuse UiFormField, UiSelect, UiBreadcrumbs and timezone-aware input policies. Bun-only local verification; NEVER trigger GitHub Actions.

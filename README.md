@@ -68,8 +68,14 @@ Read [Browser & Responsive Standards](docs/BROWSER_COMPATIBILITY.md). Cross-brow
 
 - [Architecture](ARCHITECTURE.md), [Coding Rules](CODING_RULES.md), [Agent Rules](AGENTS.md)
 - [Backend Contract](docs/API_CONTRACT.md), [UI System](docs/UI_SYSTEM.md), [Browser Compatibility](docs/BROWSER_COMPATIBILITY.md)
-- [Local Testing](docs/TESTING.md), [Deployment](docs/DEPLOYMENT.md), [Security](SECURITY.md)
+- [Local Testing](docs/TESTING.md), [Reliability Hardening](docs/HARDENING.md), [OpenAPI Contract](openapi/openapi.json), [Deployment](docs/DEPLOYMENT.md), [Security](SECURITY.md)
 
 ## Readiness
 
-PR #1 remains draft and unmerged. Legacy npm lockfile migration to Bun remains **pending local execution**. No Bun install or tests have been executed for this package-manager change. Real backend session, CSRF, tenant isolation and permission tests are required before production deployment.
+The previous skeleton has been merged to main. Hardening now lives on the separate branch `feat/enterprise-hardening-bun-auth-api`. Legacy npm lockfile migration to Bun remains **pending local execution**. No Bun install or tests have been executed for this package-manager change. Real backend session, CSRF, tenant isolation and permission tests are required before production deployment.
+
+## API reliability and reusable forms
+
+OpenAPI 3.1: `openapi/openapi.json`. Validate contract/TypeScript field parity with `bun run contract:check`. Session recovery, 401/403 semantics, cancellation of obsolete HTTP searches and atomic cursor navigation are documented in `docs/HARDENING.md`.
+
+Shared UI includes UiFormField, UiSelect ControlValueAccessor, UiDateTimeInputDirective and UiBreadcrumbs. The reference customer CRUD editor now uses them. Native datetime-local values contain no timezone offset and need explicit interpretation before API submission.
