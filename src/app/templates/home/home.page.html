@@ -1,12 +1,12 @@
 <main class="page-content" aria-labelledby="home-title">
-  <p class="eyebrow">Angular Skeleton</p>
-  <h1 id="home-title">Enterprise application foundation</h1>
-  <p>Standalone components, lazy routes, signals and strict TypeScript.</p>
+  <p class="eyebrow">{{ i18n.translate('appName') }}</p>
+  <h1 id="home-title">{{ i18n.translate('homeTitle') }}</h1>
+  <p>{{ i18n.translate('homeDescription') }}</p>
 
   <div class="page-actions">
     <button type="button" (click)="count.update(n => n + 1)">
-      Signal counter: {{ count() }}
+      {{ i18n.translate('counterLabel') }}: {{ count() }}
     </button>
-    <a routerLink="/customers">Customer API example</a>
+    <a routerLink="/customers">{{ i18n.translate('customersLink') }}</a>
   </div>
 </main>
