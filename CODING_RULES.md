@@ -31,3 +31,11 @@
 - Maintain `bun.lock` as the single lockfile after the initial migration. Until migration is completed locally, `package-lock.json` is a temporary source for Bun import, not permission to run npm.
 - Retain supported Node.js for Angular CLI compatibility, even though dependency management uses Bun.
 - **Never run, enable, dispatch, or add GitHub Actions/CI workflows** while the user has paused CI due to quota. Run requested checks locally if possible and clearly state any checks not executed.
+
+## Session, API, and form hardening
+
+- Handle expired sessions (401), forbidden resources (403), unavailable backend/retry, and races between session operations deliberately.
+- Abort obsolete GET requests and update cursor/back-stack only after success. Do not auto-replay non-idempotent mutations or 429 responses.
+- Machine contract: `openapi/openapi.json`. Update API definitions, runtime DTO parsing and field parity together, then run `bun run contract:check`.
+- Form UI uses UiFormField for labels/errors, UiSelect ControlValueAccessor for reactive forms, UiBreadcrumbs and native date/time controls. Do not treat datetime-local strings as UTC without an explicit timezone.
+- Run only LOCAL Bun quality checks. CI/GitHub Actions remains off.
