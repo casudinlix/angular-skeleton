@@ -31,7 +31,7 @@ jobs:
           npm run structure:check
           npm run check
       - name: Check Angular schematic
-        run: npx ng generate ./tools/schematics:feature --name=sample-module --dry-run --defaults
+        run: npx ng generate ./tools/schematics/collection.json:feature --name=sample-module --dry-run --defaults
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 35

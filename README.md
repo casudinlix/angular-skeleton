@@ -86,7 +86,7 @@ The generator creates `features/orders/*`, `templates/orders/orders.page.html`, 
 An Angular CLI schematic is also included under `tools/schematics/`; once Angular CLI is installed, it can be exercised with:
 
 ```bash
-npx ng generate ./tools/schematics:feature --name orders --dry-run
+npx ng generate ./tools/schematics/collection.json:feature --name orders --dry-run
 ```
 
 Run **one** of the generators, not both. Check the generated contract and translation before use. Generator runtime and Angular CLI invocation are not verified in this environment.
