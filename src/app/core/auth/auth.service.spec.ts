@@ -48,6 +48,22 @@ describe('AuthService session lifecycle', () => {
     expect((await retry).status).toBe('authenticated');
   });
 
+  it('does not erase a newer sign-in when an older session probe gets 401', async () => {
+    const stale = auth.restore();
+    const probe = requests.expectOne('/api/session');
+
+    const signIn = auth.signIn('a@example.test', 'secret');
+    requests.expectOne('/api/session').flush({
+      id: 'fresh',
+      displayName: 'New Session',
+      permissions: ['customers:read'],
+    });
+    await signIn;
+    probe.flush({ code: 'UNAUTHORIZED' }, { status: 401, statusText: 'Unauthorized' });
+    await stale;
+    expect(auth.identity?.id).toBe('fresh');
+  });
+
   it('rejects a stale restore response after local session invalidation', async () => {
     const pending = auth.restore();
     const request = requests.expectOne('/api/session');

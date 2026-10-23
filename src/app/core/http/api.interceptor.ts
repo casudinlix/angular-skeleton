@@ -23,9 +23,11 @@ export const apiInterceptor: HttpInterceptorFn = (request, next) => {
       // Global session invalidation; individual features can now react to auth.state().
       // Do not invalidate on permission-denied 403: the session may still be valid.
       if (error.status === 401) {
-        auth.invalidate();
-        // The route guard handles GET /api/session while entering protected pages.
-        // For a session expiring during an already-open feature, return to sign-in.
+        const isSessionProbe = url.pathname === '/api/session' &&
+          (request.method === 'GET' || request.method === 'POST');
+        // A stale session probe must never log out a newer successful sign-in.
+        // The AuthService.restore() caller handles its own 401 with revision checking.
+        if (!isSessionProbe) auth.invalidate();
         if (url.pathname !== '/api/session' && !router.url.startsWith('/login')) {
           void router.navigate(['/login'], { queryParams: { returnUrl: router.url } });
         }
