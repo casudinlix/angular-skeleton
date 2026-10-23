@@ -3,7 +3,6 @@ import {
 } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
 import { debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { I18nService } from '../../core/i18n/i18n.service';
@@ -15,7 +14,7 @@ import { CustomerApi } from './customer.api';
 import { Customer, CustomerInput } from './customer.types';
 
 @Component({
-  imports: [ReactiveFormsModule, RouterLink, UiButtonDirective, UiEmptyState, UiLoadingSpinner],
+  imports: [ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner],
   templateUrl: '../../templates/customers/customers.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -33,7 +32,7 @@ export class CustomersPage {
   readonly form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120)]],
     email: ['', [Validators.required, Validators.email, Validators.maxLength(254)]],
-    status: this.fb.control<'active' | 'inactive'>('active', { nonNullable: true }),
+    status: this.fb.control<'active' | 'inactive'>('active'),
   });
 
   readonly items = signal<readonly Customer[]>([]);
