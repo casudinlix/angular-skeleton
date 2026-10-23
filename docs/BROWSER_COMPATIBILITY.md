@@ -31,7 +31,7 @@ Keep Angular CLI's default browserslist targeting. Do **not** extend it beyond b
 - Use SVG for logos and UI icons wherever possible. For photographic raster images use sensible `srcset`/`sizes` and correctly sized modern formats; don't use huge 2× images indiscriminately.
 - Retina/HiDPI affects **asset density**, not breakpoint selection. Verify assets at deviceScaleFactor 1, 2 and mobile emulation.
 
-## Browser test matrix (blocking CI)
+## Browser test matrix (local release gate; GitHub CI paused)
 
 Playwright engines: Chromium, Firefox, WebKit, Android/Chromium emulation, iOS/WebKit emulation, desktop Chromium DPR2. Emulation provides early regression detection; WebKit on Linux is not a substitute for testing Safari on actual Apple hardware.
 
@@ -44,4 +44,4 @@ Acceptance criteria:
 4. Image assets remain legible at higher device pixel ratios; external font errors fall back gracefully.
 5. Source structure check, Angular build/typecheck, lint, Vitest and multi-engine Playwright pass.
 
-Run `npm run layout:check`, `npm run e2e` and the other gates documented in `docs/TESTING.md`. Manual release QA on real iPhone/iPad Safari, Android Chrome, desktop Firefox and Chromium Edge remains necessary for production UI/UX acceptance.
+Run `bun run layout:check`, `bun run e2e` and the other gates documented in `docs/TESTING.md`. Manual release QA on real iPhone/iPad Safari, Android Chrome, desktop Firefox and Chromium Edge remains necessary for production UI/UX acceptance.

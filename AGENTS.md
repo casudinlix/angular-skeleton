@@ -11,11 +11,17 @@ Read these files first: `README.md`, `ARCHITECTURE.md`, `CODING_RULES.md`, `docs
 - Never use demo identity, localStorage JWT, frontend route guards or hidden buttons as real authentication/security.
 - For changes to existing routes/forms, preserve user-visible behavior and server contracts. New modules require loading, empty, error, forbidden, tests and mobile states.
 - Use the generator for new features where appropriate and review the generated service, permissions and translations.
-- Run all CI quality gates that are available. Report observed results and blockers; never claim green from code inspection alone.
-- Leave draft PR unmerged until lockfile exists and CI/build/security checks actually pass.
+- Use local Bun quality commands when available. Report observed results and blockers; never claim green from code inspection alone. Do not trigger CI.
+- Leave the draft PR unmerged until the Bun lockfile exists, appropriate LOCAL build/security checks pass and project backend integration is reviewed; CI is explicitly paused.
 
 ## Non-negotiable cross-browser UI policy
 
 Read `docs/BROWSER_COMPATIBILITY.md` and `docs/UI_SYSTEM.md` before designing any UI. Do not add fixed-width application shells or viewport-size hacks. Preserve Plus Jakarta Sans Google Fonts plus local fallbacks, safe area handling, mobile touch targets, keyboard focus, table-local scrolling, text zoom, and all three modern browser engines. Browser size compatibility uses CSS pixels, not Retina pixel counts.
 
-Run `npm run layout:check` alongside structure, i18n, lint, unit tests, production build and cross-browser Playwright. Resolve failures rather than suppressing them. If an Angular CDK dependency is proposed for actual non-CSS responsive behavior, document its necessity and test cleanup.
+Run `bun run layout:check` alongside structure, i18n, lint, unit tests, production build and cross-browser Playwright. Resolve failures rather than suppressing them. If an Angular CDK dependency is proposed for actual non-CSS responsive behavior, document its necessity and test cleanup.
+
+## Mandatory package manager policy
+
+Canonical package manager: **Bun 1.4.4**. For installation use `bun install` (after lockfile migration: `bun install --frozen-lockfile`); for commands `bun run <script>`; for tooling `bunx`. Do not use npm, npx, pnpm or yarn. Keep Node.js as the Angular CLI runtime when required by Angular. `bunfig.toml` uses hoisted dependencies for compatibility.
+
+GitHub Actions is disabled by user request due to usage limits. Never add workflow triggers, enable CI, or dispatch tests to Actions. Do not attempt to fabricate `bun.lock`; complete migration only in a networked local Bun installation. Read `docs/CI_PAUSED.md` and `docs/TESTING.md`.

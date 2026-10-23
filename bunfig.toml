@@ -1,0 +1,4 @@
+# Preserve Node-style dependency hoisting for maximum Angular CLI compatibility.
+# Use Bun for dependency management, without forcing the Angular CLI onto the Bun runtime.
+[install]
+linker = "hoisted"

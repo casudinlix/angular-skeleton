@@ -1,8 +1,0 @@
-# CI is intentionally disabled to preserve the repository's exhausted Actions quota.
-# This file is documentation only. No automatic or manual workflow triggers.
-# Quality checks are executed locally with Bun; see docs/TESTING.md.
-name: Quality (disabled)
-on: {}
-permissions:
-  contents: read
-jobs: {}

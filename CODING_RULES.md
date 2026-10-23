@@ -2,7 +2,7 @@
 
 1. Follow https://angular.dev/style-guide, Angular 22 standalone components, TypeScript strict mode, `inject()`, signals and OnPush. Avoid NgModules for new features.
 2. Keep all HTML in `src/app/templates/<module>/` and logic/services/types/specs in `src/app/features/<module>/`. Component `templateUrl` is relative to its TypeScript file. Do not write large inline component templates.
-3. Put user-facing translations in both `src/app/core/i18n/locales/id.json` and `en.json`. Use `I18nService.translate()` with typed keys. Run `npm run i18n:check`.
+3. Put user-facing translations in both `src/app/core/i18n/locales/id.json` and `en.json`. Use `I18nService.translate()` with typed keys. Run `bun run i18n:check`.
 4. Store public brand/image/icon/font assets in `public/assets/<type>/`. Never include private data, tokens, user uploads or secrets.
 5. Use Tailwind CSS v4 and its semantic design tokens; do not create dynamic class fragments or add random global overrides. Build reusable primitives in `shared/ui/`.
 6. Use reactive forms and typed validators. Inputs require proper label, keyboard focus, error, loading, disabled and empty states.
@@ -11,8 +11,8 @@
 9. Frontend never stores tokens in localStorage. Use same-origin secure HttpOnly cookie sessions, server-supplied CSRF cookie/header, and safe error messages.
 10. Backend lists default to cursor pagination, support stable sorting and avoid OFFSET; handle invalid cursors and reset on mutation.
 11. Dates from backend use ISO 8601 with UTC/offset. Format with Intl and explicit application/user timezone, never assume the browser timezone equals business timezone.
-12. New modules use `npm run generate:feature -- <name>` or the schematic, then adapt types, auth permission, both locales, tests and route labels.
-13. Before merge: `npm run i18n:check`, `npm run structure:check`, `npm run check`, `npm run lint`, `npm test`, `npm run build`, `npm run e2e` and vulnerability scanning. If not run, state that clearly.
+12. New modules use `bun run generate:feature -- <name>` or the schematic, then adapt types, auth permission, both locales, tests and route labels.
+13. Before merge: `bun run i18n:check`, `bun run structure:check`, `bun run check`, `bun run lint`, `bun run test`, `bun run build`, `bun run e2e` and vulnerability scanning. If not run, state that clearly.
 
 ## Browser compatibility and responsive rules (mandatory)
 
@@ -22,5 +22,12 @@
 - Wide tables must have `app-scroll-region`, an accessible label and `tabindex="0"`; dialogs must constrain dimensions and scroll inside small viewports.
 - Honor mobile safe areas, stable/dynamic viewport unit fallbacks, >=16px form controls on mobile Safari, keyboard focus, reduced motion and >=44px preferred tap targets. Do not disable user zoom.
 - **Plus Jakarta Sans** via Google Fonts is the standard UI font. Preserve a system font fallback. SVG assets are preferred for high-density (Retina/HiDPI) screens; CSS breakpoints depend on CSS pixels, not device pixel ratio.
-- Run `npm run layout:check` and the Chromium/Firefox/WebKit/iOS-WebKit/Android-Chromium/Retina Playwright suite. Review on real Apple and Android devices for production.
+- Run `bun run layout:check` and the Chromium/Firefox/WebKit/iOS-WebKit/Android-Chromium/Retina Playwright suite. Review on real Apple and Android devices for production.
 - Read `docs/BROWSER_COMPATIBILITY.md` before creating or revising UI. Browser compatibility is a release gate, not an optional visual check.
+
+## Package manager and CI restrictions
+
+- **Bun 1.4.4 only** for installing/updating dependencies and running scripts: `bun install`, `bun add`, `bun remove`, `bun run <script>`, `bunx`. Do not introduce npm/pnpm/yarn commands or a second lockfile after migration.
+- Maintain `bun.lock` as the single lockfile after the initial migration. Until migration is completed locally, `package-lock.json` is a temporary source for Bun import, not permission to run npm.
+- Retain supported Node.js for Angular CLI compatibility, even though dependency management uses Bun.
+- **Never run, enable, dispatch, or add GitHub Actions/CI workflows** while the user has paused CI due to quota. Run requested checks locally if possible and clearly state any checks not executed.

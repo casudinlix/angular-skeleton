@@ -3,3 +3,5 @@ dist/
 .angular/
 coverage/
 .env
+/test-results/
+/playwright-report/

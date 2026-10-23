@@ -1,103 +1,75 @@
 # Angular Skeleton
 
-Reusable Angular 22 frontend foundation for admin panels and internal enterprise CMS. **Draft until the CI and lockfile checks pass.**
+Reusable Angular 22 frontend foundation for enterprise admin panels. Includes standalone components, strict TypeScript, signals, lazy routes, Tailwind CSS v4, Plus Jakarta Sans, ID/EN JSON, responsive shell, authenticated API contracts and cursor-pagination CRUD.
 
-Built with standalone components, zoneless rendering, signals, lazy-loaded routes, strict TypeScript, Tailwind CSS v4, JSON ID/EN i18n, typed API boundaries, form validation, accessible native dialogs, and cursor-based pagination.
+## Local setup (Bun is required)
 
-## Requirements
+- **Bun 1.4.4** is the package manager and script runner.
+- Keep Node.js **22.22.3+**, or another Angular 22-compatible version, installed because Angular CLI still uses Node.js.
+- A real backend is needed for authenticated features (development proxy defaults to http://localhost:3000).
 
-- Node.js 22.22.3+ (alternatively compatible Node 24.15+ or Node 26), npm
-- Angular 22 / TypeScript >=6.0 <6.1
-- A real backend for authenticated features (default dev proxy http://localhost:3000)
+### One-time migration from the legacy npm lockfile
+
+The repository currently retains `package-lock.json` **only as an input to Bun's lockfile migration**. This environment cannot create a real `bun.lock`, because Bun and a package registry were unavailable. On your local machine:
 
 ```bash
-npm install
-npm start
-npm run i18n:check
-npm run structure:check
-npm run check
-npm run layout:check
-npm run lint
-npm test
-npm run build
-npm run e2e
+bun --version            # recommended: 1.4.4
+bun run lock:migrate     # bun install, create bun.lock, remove package-lock.json only after success
+bun install --frozen-lockfile
+git add package.json bunfig.toml bun.lock package-lock.json
+git commit -m "build: complete Bun lockfile migration"
 ```
 
-**Dependency lock:** `package-lock.json` was generated on GitHub Actions using npm 11.19.1 and is committed. Use `npm ci` for clean repeatable installs.
+After migrating, `bun.lock` is the **only** lockfile to commit. Do not recreate `package-lock.json` or install project dependencies using npm, yarn or pnpm. See [Bun's installation documentation](https://bun.com/docs/pm/cli/install).
+
+### Development and local verification
+
+```bash
+bun install --frozen-lockfile
+bun run start
+bun run i18n:check
+bun run structure:check
+bun run layout:check
+bun run check
+bun run lint
+bun run test
+bun run build
+bunx playwright install chromium firefox webkit
+bun run e2e
+```
+
+Angular CLI, Vitest and Playwright are still the underlying tools. Bun replaces the **package manager and command runner**, not the Angular browser build tooling.
 
 ## Architecture
 
 ```text
 src/app/
-├── app.ts                    # Top-level shell/controller
-├── app.routes.ts
-├── core/
-│   ├── auth/                 # Backend session + auth and permission guards
-│   ├── config/               # Public, non-secret runtime defaults
-│   ├── http/                 # Interceptors, cursor types, API errors
-│   ├── i18n/
-│   │   ├── locales/id.json
-│   │   ├── locales/en.json
-│   │   └── i18n.service.ts
-│   └── theme/
-├── features/
-│   ├── auth/                 # Login + validation
-│   ├── customers/            # Full reference CRUD and cursor table
-│   ├── errors/               # 401, 403, 404, 500, maintenance
-│   └── home/
-├── shared/ui/                # Button, Input, DataTable, Dialog, EmptyState,
-│                             # Skeleton, Spinner, Toast service/container
-└── templates/
-    ├── app/
-    ├── auth/
-    ├── customers/
-    ├── errors/
-    ├── home/
-    └── shared/
-public/assets/
-├── branding/
-├── icons/
-├── images/
-├── illustrations/
-└── fonts/
-tools/
-├── generate-feature.mjs      # Reliable npm feature generator
-└── schematics/               # Angular schematic collection
+├── core/                 # Sessions, HTTP, i18n, locale, theme
+├── features/             # Auth, customers, home, error routes
+├── shared/ui/            # Accessible UI primitives
+├── templates/            # HTML per feature/module
+└── app.routes.ts
+public/assets/           # Static branding, icons, images and fonts
+tools/                   # Feature generator + Angular schematic
+scripts/                 # Structure, i18n, responsive checks and Bun migration helper
 ```
 
-The user-selected convention keeps all HTML under `templates/<module>/` and TypeScript code in `features/<module>/`. `templateUrl` paths are relative to the component TypeScript file.
+Start a module using `bun run generate:feature -- orders`, or `bunx ng generate ./tools/schematics/collection.json:feature --name orders --dry-run`. Update both JSON locales and backend authorization contracts for real modules.
 
-## Features
+## Browser compatibility
 
-- Routes are lazy-loaded and protected only when a backend-verified session and permission is required.
-- API session: `GET /api/session`, `POST /api/session`, `DELETE /api/session`.
-- Customer API: `GET /api/customers`, `GET /api/customers/:id`, `POST /api/customers`, `PATCH /api/customers/:id`, `DELETE /api/customers/:id`.
-- Customer list supports debounced server search, cursor next/previous, empty/loading/error states, and permission-aware create/edit/delete actions.
-- Two languages (ID and EN) are compiled from JSON; locale switch persists preference in localStorage (never credentials). A timezone-aware formatter defaults to Asia/Jakarta.
-- Tailwind v4 supports dark mode and design tokens. **Plus Jakarta Sans** is loaded from Google Fonts with system fallback. Static assets in `public/` are copied to the site's root during build.
+Read [Browser & Responsive Standards](docs/BROWSER_COMPATIBILITY.md). Cross-browser layout testing covers Chromium, Firefox, WebKit, mobile emulations and high-DPI; Plus Jakarta Sans is served from Google Fonts with a system font fallback.
 
-## Generate a feature
+## CI quota policy
 
-```bash
-npm run generate:feature -- orders
-```
+**GitHub Actions is disabled, and no CI tests are being run.** Perform checks locally with Bun. The previous automatic workflow was removed from `.github/workflows/` to avoid consuming Actions minutes. See [CI Paused](docs/CI_PAUSED.md) and [Local Testing](docs/TESTING.md).
 
-The generator creates `features/orders/*`, `templates/orders/orders.page.html`, a typed service/model starter, a basic unit test, a route with `orders:read` permission and new ID/EN translation keys.
+## References
 
-An Angular CLI schematic is also included under `tools/schematics/`; once Angular CLI is installed, it can be exercised with:
-
-```bash
-npx ng generate ./tools/schematics/collection.json:feature --name orders --dry-run
-```
-
-Run **one** of the generators, not both. Check the generated contract and translation before use. Generator runtime and Angular CLI invocation are not verified in this environment.
-
-## Documents
-
-- [Architecture](ARCHITECTURE.md), [Coding Rules](CODING_RULES.md), [Agent Instructions](AGENTS.md)
-- [API contract](docs/API_CONTRACT.md), [UI design system](docs/UI_SYSTEM.md)
-- [Testing and release gates](docs/TESTING.md), [Cross-browser responsive contract](docs/BROWSER_COMPATIBILITY.md), [Deployment](docs/DEPLOYMENT.md), [Security](SECURITY.md)
+- [Architecture](ARCHITECTURE.md), [Coding Rules](CODING_RULES.md), [Agent Rules](AGENTS.md)
+- [Backend Contract](docs/API_CONTRACT.md), [UI System](docs/UI_SYSTEM.md), [Browser Compatibility](docs/BROWSER_COMPATIBILITY.md)
+- [Local Testing](docs/TESTING.md), [Deployment](docs/DEPLOYMENT.md), [Security](SECURITY.md)
 
 ## Readiness
 
-Source is committed on PR #1 and not merged to main. GitHub Actions has successfully run dependency installation, Angular compilation, lint, Vitest, Playwright and dependency audit on the implementation before this final lockfile commit. Local execution remains unavailable. Final npm-ci CI results must be checked before marking the PR ready. Production deployment still requires a real backend and security review.
+PR #1 remains draft and unmerged. Legacy npm lockfile migration to Bun remains **pending local execution**. No Bun install or tests have been executed for this package-manager change. Real backend session, CSRF, tenant isolation and permission tests are required before production deployment.

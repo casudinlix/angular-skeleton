@@ -12,10 +12,11 @@
     "e2e": "playwright test",
     "i18n:check": "node scripts/validate-i18n.mjs",
     "structure:check": "node scripts/check-structure.mjs",
-    "quality": "npm run i18n:check && npm run structure:check && npm run layout:check && npm run lint && npm test && npm run build",
+    "quality": "bun run i18n:check && bun run structure:check && bun run layout:check && bun run lint && bun run test && bun run build",
     "generate:feature": "node tools/generate-feature.mjs",
     "format:check": "prettier --check 'src/**/*.{ts,html,css,json}' 'tools/**/*.{mjs,cjs,json}'",
-    "layout:check": "node scripts/check-layout.mjs"
+    "layout:check": "node scripts/check-layout.mjs",
+    "lock:migrate": "bun install && node scripts/finalize-bun-migration.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
@@ -51,5 +52,5 @@
     "node": "^22.22.3 || ^24.15.0 || ^26.0.0"
   },
   "schematics": "./tools/schematics/collection.json",
-  "packageManager": "npm@11.19.1"
+  "packageManager": "bun@1.4.4"
 }

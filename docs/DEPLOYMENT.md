@@ -16,7 +16,7 @@ Dev only: `proxy.conf.json` forwards /api to localhost:3000. Adjust for your bac
 
 ## Release
 
-1. Commit `package-lock.json`; perform clean `npm ci` on supported Node.
+1. Generate and commit `bun.lock`; perform `bun install --frozen-lockfile` with Bun 1.4.4 (and a Node.js version supported by Angular CLI).
 2. Run all gates in `docs/TESTING.md`, including E2E and server auth/isolation testing.
 3. Configure deployment origin, /api proxy, CSP, HTTPS, tenant-specific domain rules and 404 fallback.
 4. Promote the built asset as an immutable release, monitor frontend errors and maintain rollback capability.
@@ -26,4 +26,4 @@ Dev only: `proxy.conf.json` forwards /api to localhost:3000. Adjust for your bac
 
 Plus Jakarta Sans is loaded using a Google Fonts stylesheet with `display=swap`; the UI still renders with system fonts if Google Fonts is blocked. Under a restrictive Content Security Policy, allow the reviewed stylesheet endpoint `https://fonts.googleapis.com` under `style-src` and the corresponding font files from `https://fonts.gstatic.com` under `font-src`. Do **not** weaken the rest of the CSP or enable broad `unsafe-inline` permissions merely to allow fonts. If corporate/offline delivery cannot make remote font requests, deploy properly licensed local subsets with `@font-face` and retain the fallback stack.
 
-Do not disable pinch zoom or text scaling. Test safe-area and viewport behavior on real Safari and Android devices in addition to the CI emulators.
+Do not disable pinch zoom or text scaling. Test safe-area and viewport behavior on real Safari and Android devices in addition to the locally-run browser emulators.

@@ -3,7 +3,7 @@ import { join, resolve } from 'node:path';
 
 const name = process.argv[2];
 if (!name || !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(name)) {
-  console.error('Usage: npm run generate:feature -- feature-name (lowercase kebab-case)');
+  console.error('Usage: bun run generate:feature -- feature-name (lowercase kebab-case)');
   process.exit(1);
 }
 const root = resolve('.');
