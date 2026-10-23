@@ -28,3 +28,7 @@ The only default app font is **Plus Jakarta Sans** (Google Fonts CSS, weights 40
 - Respect `prefers-reduced-motion`, zoom/reflow, keyboard focus, and screen readers.
 
 See `docs/BROWSER_COMPATIBILITY.md`. Any new component must pass cross-browser responsive E2E before merging.
+
+## Shared forms
+
+New reusable primitives: UiFormField (semantic label, hint/error and required indicator), UiSelect (Angular ControlValueAccessor for reactive forms), UiDateTimeInputDirective (native datetime-local) and UiBreadcrumbs. The customer editor uses common form wrappers and select. Native datetime-local contains no UTC offset: use an explicit timezone conversion at the API boundary.
