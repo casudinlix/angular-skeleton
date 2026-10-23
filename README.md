@@ -16,6 +16,7 @@ npm start
 npm run i18n:check
 npm run structure:check
 npm run check
+npm run layout:check
 npm run lint
 npm test
 npm run build
@@ -73,7 +74,7 @@ The user-selected convention keeps all HTML under `templates/<module>/` and Type
 - Customer API: `GET /api/customers`, `GET /api/customers/:id`, `POST /api/customers`, `PATCH /api/customers/:id`, `DELETE /api/customers/:id`.
 - Customer list supports debounced server search, cursor next/previous, empty/loading/error states, and permission-aware create/edit/delete actions.
 - Two languages (ID and EN) are compiled from JSON; locale switch persists preference in localStorage (never credentials). A timezone-aware formatter defaults to Asia/Jakarta.
-- Tailwind v4 supports dark mode and design tokens. Static assets in `public/` are copied to the site's root during build.
+- Tailwind v4 supports dark mode and design tokens. **Plus Jakarta Sans** is loaded from Google Fonts with system fallback. Static assets in `public/` are copied to the site's root during build.
 
 ## Generate a feature
 
@@ -95,7 +96,7 @@ Run **one** of the generators, not both. Check the generated contract and transl
 
 - [Architecture](ARCHITECTURE.md), [Coding Rules](CODING_RULES.md), [Agent Instructions](AGENTS.md)
 - [API contract](docs/API_CONTRACT.md), [UI design system](docs/UI_SYSTEM.md)
-- [Testing and release gates](docs/TESTING.md), [Deployment](docs/DEPLOYMENT.md), [Security](SECURITY.md)
+- [Testing and release gates](docs/TESTING.md), [Cross-browser responsive contract](docs/BROWSER_COMPATIBILITY.md), [Deployment](docs/DEPLOYMENT.md), [Security](SECURITY.md)
 
 ## Readiness
 

@@ -19,3 +19,9 @@ Angular 22 standalone features, built-in DI, functional guards/interceptors, a p
 - No authentication backend, payment processing, tenant DB, or identity issuer inside this frontend repository.
 - Do not treat browser permissions, localStorage or frontend DTO types as trusted security controls.
 - SSR is not required for authenticated CMS; evaluate per product if a public SEO route is added.
+
+## Browser and layout architecture
+
+Browser targets follow Angular 22's documented Baseline. UI is CSS-first with intrinsically sized flex/grid containers; no framework viewport service is required for the current application shell. `src/styles.css` owns viewport, safe-area, touch and overflow primitives, and uses Google Fonts Plus Jakarta Sans plus OS fallbacks. Prefer SVG or correctly sized responsive raster assets over separate Retina-specific layouts.
+
+Accessibility and responsive regressions are detected through `scripts/check-layout.mjs` and Playwright testing on Chromium, Firefox, WebKit, emulated Android/iOS and DPR2. Real-device Safari and Android acceptance testing is still required before production deployment. See `docs/BROWSER_COMPATIBILITY.md`.

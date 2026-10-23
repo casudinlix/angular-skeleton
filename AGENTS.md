@@ -13,3 +13,9 @@ Read these files first: `README.md`, `ARCHITECTURE.md`, `CODING_RULES.md`, `docs
 - Use the generator for new features where appropriate and review the generated service, permissions and translations.
 - Run all CI quality gates that are available. Report observed results and blockers; never claim green from code inspection alone.
 - Leave draft PR unmerged until lockfile exists and CI/build/security checks actually pass.
+
+## Non-negotiable cross-browser UI policy
+
+Read `docs/BROWSER_COMPATIBILITY.md` and `docs/UI_SYSTEM.md` before designing any UI. Do not add fixed-width application shells or viewport-size hacks. Preserve Plus Jakarta Sans Google Fonts plus local fallbacks, safe area handling, mobile touch targets, keyboard focus, table-local scrolling, text zoom, and all three modern browser engines. Browser size compatibility uses CSS pixels, not Retina pixel counts.
+
+Run `npm run layout:check` alongside structure, i18n, lint, unit tests, production build and cross-browser Playwright. Resolve failures rather than suppressing them. If an Angular CDK dependency is proposed for actual non-CSS responsive behavior, document its necessity and test cleanup.

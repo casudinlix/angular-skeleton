@@ -13,3 +13,14 @@
 11. Dates from backend use ISO 8601 with UTC/offset. Format with Intl and explicit application/user timezone, never assume the browser timezone equals business timezone.
 12. New modules use `npm run generate:feature -- <name>` or the schematic, then adapt types, auth permission, both locales, tests and route labels.
 13. Before merge: `npm run i18n:check`, `npm run structure:check`, `npm run check`, `npm run lint`, `npm test`, `npm run build`, `npm run e2e` and vulnerability scanning. If not run, state that clearly.
+
+## Browser compatibility and responsive rules (mandatory)
+
+- Support Angular 22's official widely-available Web Platform Baseline. Never promise obsolete browsers (IE/unsupported WebViews); never expand Angular CLI browserslist beyond its supported targets.
+- Every component must reflow at CSS viewport widths **280/320/360/375/390/430/600/768/1024/1280/1440/1920**, in portrait and landscape as relevant. Zoom and OS text scaling must not hide controls or produce document-level horizontal scrolling.
+- Use mobile-first Tailwind CSS v4, `min-w-0`, `max-w-full`, `flex-wrap`, intrinsic Grid `minmax(0,1fr)`, relative sizes and shared responsive primitives. Avoid fixed widths, `overflow-x-hidden` as a cover-up, browser sniffing and unnecessary viewport JavaScript.
+- Wide tables must have `app-scroll-region`, an accessible label and `tabindex="0"`; dialogs must constrain dimensions and scroll inside small viewports.
+- Honor mobile safe areas, stable/dynamic viewport unit fallbacks, >=16px form controls on mobile Safari, keyboard focus, reduced motion and >=44px preferred tap targets. Do not disable user zoom.
+- **Plus Jakarta Sans** via Google Fonts is the standard UI font. Preserve a system font fallback. SVG assets are preferred for high-density (Retina/HiDPI) screens; CSS breakpoints depend on CSS pixels, not device pixel ratio.
+- Run `npm run layout:check` and the Chromium/Firefox/WebKit/iOS-WebKit/Android-Chromium/Retina Playwright suite. Review on real Apple and Android devices for production.
+- Read `docs/BROWSER_COMPATIBILITY.md` before creating or revising UI. Browser compatibility is a release gate, not an optional visual check.

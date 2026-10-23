@@ -21,3 +21,9 @@ Dev only: `proxy.conf.json` forwards /api to localhost:3000. Adjust for your bac
 3. Configure deployment origin, /api proxy, CSP, HTTPS, tenant-specific domain rules and 404 fallback.
 4. Promote the built asset as an immutable release, monitor frontend errors and maintain rollback capability.
 5. Restrict public folders to licensed and non-sensitive assets.
+
+## Google Fonts and CSP
+
+Plus Jakarta Sans is loaded using a Google Fonts stylesheet with `display=swap`; the UI still renders with system fonts if Google Fonts is blocked. Under a restrictive Content Security Policy, allow the reviewed stylesheet endpoint `https://fonts.googleapis.com` under `style-src` and the corresponding font files from `https://fonts.gstatic.com` under `font-src`. Do **not** weaken the rest of the CSP or enable broad `unsafe-inline` permissions merely to allow fonts. If corporate/offline delivery cannot make remote font requests, deploy properly licensed local subsets with `@font-face` and retain the fallback stack.
+
+Do not disable pinch zoom or text scaling. Test safe-area and viewport behavior on real Safari and Android devices in addition to the CI emulators.
