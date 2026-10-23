@@ -3,22 +3,26 @@ import {
 } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom, Subscription } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { HasPermissionDirective } from '../../core/auth/has-permission.directive';
+import { ApiRequestError } from '../../core/http/api.types';
 import { I18nService } from '../../core/i18n/i18n.service';
 import { UiButtonDirective } from '../../shared/ui/button.directive';
-import { UiEmptyState } from '../../shared/ui/empty-state';
-import { UiLoadingSpinner } from '../../shared/ui/loading-spinner';
-import { ToastService } from '../../shared/ui/toast.service';
-import { UiInputDirective } from '../../shared/ui/input.directive';
 import { UiDataTableDirective } from '../../shared/ui/data-table.directive';
 import { UiDialogDirective } from '../../shared/ui/dialog.directive';
+import { UiEmptyState } from '../../shared/ui/empty-state';
+import { UiInputDirective } from '../../shared/ui/input.directive';
+import { UiLoadingSpinner } from '../../shared/ui/loading-spinner';
+import { ToastService } from '../../shared/ui/toast.service';
 import { CustomerApi } from './customer.api';
 import { Customer, CustomerInput } from './customer.types';
 
 @Component({
-  imports: [ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner, UiInputDirective, UiDataTableDirective, UiDialogDirective, HasPermissionDirective],
+  imports: [
+    ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner,
+    UiInputDirective, UiDataTableDirective, UiDialogDirective, HasPermissionDirective,
+  ],
   templateUrl: '../../templates/customers/customers.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -47,67 +51,92 @@ export class CustomersPage {
   readonly error = signal(false);
   readonly editing = signal<Customer | null>(null);
   readonly pendingDelete = signal<Customer | null>(null);
+
   private requestSequence = 0;
   private currentCursor: string | null = null;
+  private listSubscription: Subscription | null = null;
 
   constructor() {
-    this.search.valueChanges.pipe(debounceTime(350), distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)).subscribe(() => this.loadPage(null, true));
+    this.search.valueChanges.pipe(
+      debounceTime(350), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef),
+    ).subscribe(() => this.loadPage(null, true));
+
+    this.destroyRef.onDestroy(() => this.listSubscription?.unsubscribe());
     this.loadPage();
   }
 
-  loadPage(cursor: string | null = this.currentCursor, resetHistory = false): void {
-    const request = ++this.requestSequence;
-    this.currentCursor = cursor;
-    if (resetHistory) this.history.set([]);
+  /**
+   * Unsubscribe from the previous HttpClient request before requesting new data.
+   * Only commit the cursor and its back-stack after a successful response.
+   */
+  loadPage(
+    cursor: string | null = this.currentCursor,
+    resetHistory = false,
+    proposedHistory?: readonly (string | null)[],
+  ): void {
+    const requestId = ++this.requestSequence;
+    this.listSubscription?.unsubscribe();
     this.loading.set(true);
     this.error.set(false);
-    this.api.list({ limit: 20, cursor: cursor ?? undefined, search: this.search.value.trim() })
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: page => {
-          if (request !== this.requestSequence) return;
-          this.items.set(page.items);
-          this.cursor.set(page.nextCursor);
-          this.loading.set(false);
-        },
-        error: () => {
-          if (request !== this.requestSequence) return;
-          this.items.set([]);
-          this.cursor.set(null);
-          this.loading.set(false);
-          this.error.set(true);
-        },
-      });
+
+    this.listSubscription = this.api.list({
+      limit: 20, cursor: cursor ?? undefined, search: this.search.value.trim(),
+    }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: page => {
+        if (requestId !== this.requestSequence) return;
+        this.currentCursor = cursor;
+        this.items.set(page.items);
+        this.cursor.set(page.nextCursor);
+        if (resetHistory) this.history.set([]);
+        else if (proposedHistory) this.history.set(proposedHistory);
+        this.loading.set(false);
+      },
+      error: (error: unknown) => {
+        if (requestId !== this.requestSequence) return;
+        // Opaque cursors can expire when records change or a tenant/filter changes.
+        // Recover to the first page once, never retry arbitrary mutations.
+        if (cursor !== null && error instanceof ApiRequestError &&
+            (error.status === 400 || error.status === 410 || error.status === 422)) {
+          this.loadPage(null, true);
+          return;
+        }
+        this.loading.set(false);
+        this.error.set(true);
+      },
+    });
   }
 
   next(): void {
     const nextCursor = this.cursor();
     if (!nextCursor || this.loading()) return;
-    this.history.update(prev => [...prev, this.currentCursor]);
-    this.loadPage(nextCursor);
+    this.loadPage(nextCursor, false, [...this.history(), this.currentCursor]);
   }
+
   previous(): void {
-    const previous = this.history();
-    if (!previous.length || this.loading()) return;
-    this.history.set(previous.slice(0, -1));
-    this.loadPage(previous[previous.length - 1]);
+    const stack = this.history();
+    if (!stack.length || this.loading()) return;
+    this.loadPage(stack[stack.length - 1], false, stack.slice(0, -1));
   }
+
   newCustomer(): void {
     this.editing.set(null);
     this.form.reset({ name: '', email: '', status: 'active' });
     this.editor()?.nativeElement.showModal();
   }
+
   editCustomer(item: Customer): void {
     this.editing.set(item);
     this.form.reset({ name: item.name, email: item.email, status: item.status });
     this.editor()?.nativeElement.showModal();
   }
+
   closeEditor(): void { this.editor()?.nativeElement.close(); }
+
   confirmDelete(item: Customer): void {
     this.pendingDelete.set(item);
     this.removal()?.nativeElement.showModal();
   }
+
   closeRemoval(): void { this.removal()?.nativeElement.close(); }
 
   async save(): Promise<void> {
@@ -126,7 +155,9 @@ export class CustomersPage {
       this.loadPage(null, true);
     } catch {
       this.toast.show('error', this.i18n.translate('operationFailed'));
-    } finally { this.saving.set(false); }
+    } finally {
+      this.saving.set(false);
+    }
   }
 
   async remove(): Promise<void> {
@@ -141,6 +172,8 @@ export class CustomersPage {
       this.loadPage(null, true);
     } catch {
       this.toast.show('error', this.i18n.translate('operationFailed'));
-    } finally { this.saving.set(false); }
+    } finally {
+      this.saving.set(false);
+    }
   }
 }
