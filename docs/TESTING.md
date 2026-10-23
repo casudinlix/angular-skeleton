@@ -44,3 +44,7 @@ The scripts operate on the local machine; nothing is sent to GitHub Actions. Chr
 No Bun executable or package registry was available in the current working environment, so **no local Bun install/build/tests have been executed**. Source and JSON configuration can be inspected, but lockfile migration and runtime checks must be carried out on a local system where Bun is installed.
 
 Historic GitHub Actions successes belong to the previous npm-backed commits. They must not be presented as validation of this Bun migration. CI stays disabled until the user explicitly re-enables it.
+
+## Additional local hardening verification
+
+Run `bun run contract:check` to validate OpenAPI schemas and customer field parity. New test specifications cover stale session races, 401 and backend recovery, blocked preference storage, request cancellation, cursor history and UiSelect ControlValueAccessor. These tests have not been executed for this branch in this environment. GitHub Actions remains disabled.
