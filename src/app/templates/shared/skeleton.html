@@ -1,4 +1,4 @@
-<div role="status" aria-label="Loading" class="animate-pulse space-y-3">
+<div role="status" [attr.aria-label]="i18n.translate('loadingLabel')" class="animate-pulse space-y-3">
   @for (line of skeletonLines(); track line) {
     @if ($last) { <div class="h-4 w-3/4 rounded-full bg-slate-200 dark:bg-slate-800"></div> }
     @else { <div class="h-4 w-full rounded-full bg-slate-200 dark:bg-slate-800"></div> }

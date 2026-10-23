@@ -1,4 +1,4 @@
-<aside class="pointer-events-none fixed bottom-5 right-5 z-50 flex w-[min(24rem,calc(100vw-2rem))] flex-col gap-2" aria-label="Notifications">
+<aside class="pointer-events-none fixed bottom-5 right-5 z-50 flex w-[min(24rem,calc(100vw-2rem))] flex-col gap-2" [attr.aria-label]="i18n.translate('notifications')">
   @for (item of toast.messages(); track item.id) {
     <div role="status" class="pointer-events-auto flex items-start justify-between gap-3 rounded-xl border bg-white p-4 text-sm shadow-xl dark:bg-slate-900"
       [class.border-red-300]="item.kind === 'error'"
