@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 import { CursorPage, ApiRequestError } from '../../core/http/api.types';
@@ -21,7 +22,7 @@ describe('CustomersPage cursor and request cancellation', () => {
       },
     };
     TestBed.configureTestingModule({
-      providers: [{ provide: CustomerApi, useValue: api }],
+      providers: [provideHttpClient(), { provide: CustomerApi, useValue: api }],
     });
     const page = TestBed.runInInjectionContext(() => new CustomersPage());
     return { page, streams };

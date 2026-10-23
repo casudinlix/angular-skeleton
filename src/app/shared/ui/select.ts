@@ -10,6 +10,7 @@ export interface UiSelectOption {
 
 @Component({
   selector: 'ui-select',
+  host: { class: 'block w-full min-w-0' },
   templateUrl: '../../templates/shared/select.html',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
