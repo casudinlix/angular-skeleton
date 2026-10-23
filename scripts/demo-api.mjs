@@ -4,6 +4,8 @@
  */
 import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
 const ACCOUNT = Object.freeze({ email: 'demo@example.test', password: 'demo12345' });
 const PERMISSIONS = ['customers:read', 'customers:create', 'customers:update', 'customers:delete'];
@@ -21,6 +23,7 @@ const MAX_BODY = 16 * 1024;
 export function createDemoServer() {
   const customers = new Map(SEED.map(item => [item.id, { ...item }]));
   const sessions = new Map();
+  const instanceId = process.env.DEMO_INSTANCE_KEY ?? '';
   let nextId = SEED.length;
 
   function json(res, status, value, additional = {}) {
@@ -90,7 +93,7 @@ export function createDemoServer() {
       const jar = cookies(req);
       const session = sessions.get(jar.demo_session);
       if (path === '/_demo/health' && method === 'GET') {
-        return json(res, 200, { mode: 'local-demo', status: 'ready' });
+        return json(res, 200, { mode: 'local-demo', status: 'ready', instanceId });
       }
       if (!path.startsWith('/api/')) return failure(res, 404, 'NOT_FOUND', 'Unknown endpoint');
 
@@ -197,7 +200,7 @@ export function createDemoServer() {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === new URL('file://' + process.argv[1]).href) {
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
   const port = Number(process.env.DEMO_API_PORT ?? '3000');
   const server = createDemoServer();
   server.on('error', error => {

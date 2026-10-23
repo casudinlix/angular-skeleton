@@ -1,9 +1,11 @@
 import { spawn } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 
+const instanceId = randomUUID();
 const api = spawn(process.execPath, ['scripts/demo-api.mjs'], {
   stdio: 'inherit',
-  env: { ...process.env, DEMO_API_PORT: '3000' },
+  env: { ...process.env, DEMO_API_PORT: '3000', DEMO_INSTANCE_KEY: instanceId },
 });
 let angular;
 let shuttingDown = false;
@@ -29,7 +31,7 @@ for (let i = 0; i < 40 && !shuttingDown; i++) {
   try {
     const response = await fetch('http://127.0.0.1:3000/_demo/health', { signal: AbortSignal.timeout(1000) });
     const data = await response.json();
-    if (response.ok && data?.mode === 'local-demo') { ready = true; break; }
+    if (response.ok && data?.mode === 'local-demo' && data?.instanceId === instanceId) { ready = true; break; }
   } catch { /* Probe only: demo API may not have started yet. */ }
   await delay(125);
 }
