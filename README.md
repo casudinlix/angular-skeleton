@@ -22,7 +22,7 @@ npm run build
 npm run e2e
 ```
 
-**Important:** `package-lock.json` is not committed yet because npm registry was inaccessible during authoring. On a machine with npm access run `npm install` and commit the resulting lockfile before marking production-ready. CI temporarily uses `npm install` until the lockfile exists, then switches to `npm ci`.
+**Dependency lock:** `package-lock.json` was generated on GitHub Actions using npm 11.19.1 and is committed. Use `npm ci` for clean repeatable installs.
 
 ## Architecture
 
@@ -99,4 +99,4 @@ Run **one** of the generators, not both. Check the generated contract and transl
 
 ## Readiness
 
-Source is committed on PR #1, not merged to main. JSON and template path checks can be audited statically, but **installation, Angular compiler, lint, tests, E2E and production bundle were not run locally** due to unavailable npm registry and an older local Node version. Keep PR in draft until GitHub CI reports green, the lockfile is committed and a backend integration/security review has been performed.
+Source is committed on PR #1 and not merged to main. GitHub Actions has successfully run dependency installation, Angular compilation, lint, Vitest, Playwright and dependency audit on the implementation before this final lockfile commit. Local execution remains unavailable. Final npm-ci CI results must be checked before marking the PR ready. Production deployment still requires a real backend and security review.

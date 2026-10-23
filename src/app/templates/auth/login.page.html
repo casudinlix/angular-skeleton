@@ -9,7 +9,7 @@
     <form class="mt-7 space-y-5" [formGroup]="form" (ngSubmit)="submit()">
       <div>
         <label class="mb-2 block text-sm font-medium" for="login-email">{{ i18n.translate('email') }}</label>
-        <input id="login-email" type="email" autocomplete="username" formControlName="email"
+        <input uiInput id="login-email" type="email" autocomplete="username" formControlName="email"
           class="w-full rounded-lg border border-slate-300 bg-transparent px-4 py-3 text-sm dark:border-slate-700"
           [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched" />
         @if (form.controls.email.touched && form.controls.email.invalid) {
@@ -18,7 +18,7 @@
       </div>
       <div>
         <label class="mb-2 block text-sm font-medium" for="login-password">{{ i18n.translate('password') }}</label>
-        <input id="login-password" type="password" autocomplete="current-password" formControlName="password"
+        <input uiInput id="login-password" type="password" autocomplete="current-password" formControlName="password"
           class="w-full rounded-lg border border-slate-300 bg-transparent px-4 py-3 text-sm dark:border-slate-700" />
         @if (form.controls.password.touched && form.controls.password.invalid) { <p class="mt-1 text-xs text-red-600">{{ i18n.translate('required') }}</p> }
       </div>

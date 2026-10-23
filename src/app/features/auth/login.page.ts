@@ -3,10 +3,11 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { I18nService } from '../../core/i18n/i18n.service';
+import { UiInputDirective } from '../../shared/ui/input.directive';
 import { UiButtonDirective } from '../../shared/ui/button.directive';
 
 @Component({
-  imports: [ReactiveFormsModule, RouterLink, UiButtonDirective],
+  imports: [ReactiveFormsModule, RouterLink, UiButtonDirective, UiInputDirective],
   templateUrl: '../../templates/auth/login.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

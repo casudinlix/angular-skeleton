@@ -10,11 +10,14 @@ import { UiButtonDirective } from '../../shared/ui/button.directive';
 import { UiEmptyState } from '../../shared/ui/empty-state';
 import { UiLoadingSpinner } from '../../shared/ui/loading-spinner';
 import { ToastService } from '../../shared/ui/toast.service';
+import { UiInputDirective } from '../../shared/ui/input.directive';
+import { UiDataTableDirective } from '../../shared/ui/data-table.directive';
+import { UiDialogDirective } from '../../shared/ui/dialog.directive';
 import { CustomerApi } from './customer.api';
 import { Customer, CustomerInput } from './customer.types';
 
 @Component({
-  imports: [ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner],
+  imports: [ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner, UiInputDirective, UiDataTableDirective, UiDialogDirective],
   templateUrl: '../../templates/customers/customers.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
