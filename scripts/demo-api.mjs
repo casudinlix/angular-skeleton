@@ -170,9 +170,10 @@ export function createDemoServer() {
         return failure(res, 405, 'METHOD_NOT_ALLOWED', 'Method not allowed');
       }
 
-      const match = /^\/api\/customers\/([^/]+)$/.exec(path);
-      if (!match) return failure(res, 404, 'NOT_FOUND', 'Unknown endpoint');
-      const id = decodeURIComponent(match[1]);
+      const rawId = path.startsWith('/api/customers/')
+        ? path.slice('/api/customers/'.length) : '';
+      if (!rawId || rawId.includes('/')) return failure(res, 404, 'NOT_FOUND', 'Unknown endpoint');
+      const id = decodeURIComponent(rawId);
       const item = customers.get(id);
       if (!item) return failure(res, 404, 'CUSTOMER_NOT_FOUND', 'Customer not found');
       if (method === 'GET') return json(res, 200, item);
