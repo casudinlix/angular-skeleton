@@ -13,7 +13,8 @@
     "i18n:check": "node scripts/validate-i18n.mjs",
     "structure:check": "node scripts/check-structure.mjs",
     "quality": "npm run i18n:check && npm run structure:check && npm run lint && npm test && npm run build",
-    "generate:feature": "node tools/generate-feature.mjs"
+    "generate:feature": "node tools/generate-feature.mjs",
+    "format:check": "prettier --check 'src/**/*.{ts,html,css,json}' 'tools/**/*.{mjs,cjs,json}'"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
@@ -47,5 +48,6 @@
   "type": "module",
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || ^26.0.0"
-  }
+  },
+  "schematics": "./tools/schematics/collection.json"
 }

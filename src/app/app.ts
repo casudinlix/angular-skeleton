@@ -25,9 +25,11 @@ export class App {
   }
   closeMenu(): void { this.menuOpen.set(false); }
   async signOut(): Promise<void> {
-    try { await this.auth.signOut(); } catch {
+    try {
+      await this.auth.signOut();
+      await this.router.navigateByUrl('/');
+    } catch {
       this.toast.show('error', this.i18n.translate('operationFailed'));
     }
-    await this.router.navigateByUrl('/');
   }
 }

@@ -59,8 +59,8 @@ export class AuthService {
   }
 
   async signOut(): Promise<void> {
-    try { await firstValueFrom(this.http.delete<void>(`${this.prefix}/session`)); }
-    finally { this.current.set({ status: 'anonymous' }); }
+    await firstValueFrom(this.http.delete<void>(`${this.prefix}/session`));
+    this.current.set({ status: 'anonymous' });
   }
   invalidate(): void { this.current.set({ status: 'anonymous' }); }
 }
