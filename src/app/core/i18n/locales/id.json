@@ -1,0 +1,18 @@
+{
+  "appName": "Angular Skeleton",
+  "language": "Bahasa",
+  "homeTitle": "Pondasi aplikasi enterprise",
+  "homeDescription": "Komponen mandiri, lazy routes, signals, dan TypeScript strict.",
+  "counterLabel": "Penghitung",
+  "customersLink": "Contoh API pelanggan",
+  "customersTitle": "Pelanggan",
+  "customersDescription": "Contoh API bertipe dengan pagination cursor dari server. Memerlukan endpoint /api/customers.",
+  "refresh": "Muat ulang",
+  "loading": "Memuat...",
+  "emptyCustomers": "Belum ada pelanggan.",
+  "nextPage": "Halaman berikutnya",
+  "backToHome": "Kembali ke beranda",
+  "notFoundTitle": "Halaman tidak ditemukan",
+  "notFoundDescription": "Halaman yang diminta tidak tersedia.",
+  "customerApiError": "API tidak tersedia. Konfigurasi endpoint /api/customers."
+}
