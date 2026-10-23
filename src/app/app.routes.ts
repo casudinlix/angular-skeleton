@@ -6,6 +6,7 @@ export const routes: Routes = [
   { path: 'customers', title: 'Customers', canActivate: [authGuard, permissionGuard],
     data: { permission: 'customers:read' },
     loadComponent: () => import('./features/customers/customers.page').then(m => m.CustomersPage) },
+  // FEATURE_ROUTE_ANCHOR
   { path: '401', title: 'Authentication required', loadComponent: () => import('./features/errors/error.page').then(m => m.ErrorPage), data: { status: '401' } },
   { path: '403', title: 'Access denied', loadComponent: () => import('./features/errors/error.page').then(m => m.ErrorPage), data: { status: '403' } },
   { path: '500', title: 'Server error', loadComponent: () => import('./features/errors/error.page').then(m => m.ErrorPage), data: { status: '500' } },
