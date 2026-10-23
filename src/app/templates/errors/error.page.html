@@ -1,6 +1,6 @@
-<section class="mx-auto min-w-0 max-w-xl rounded-2xl border border-slate-200 bg-white p-5 text-center dark:border-slate-800 dark:bg-slate-900 sm:p-10" role="alert">
+<section class="app-panel mx-auto min-w-0 max-w-xl p-6 text-center sm:p-10" role="alert">
   <div class="mx-auto flex size-16 items-center justify-center rounded-2xl bg-brand-50 text-3xl text-brand-700 dark:bg-slate-800">◇</div>
-  <p class="mt-6 text-sm font-bold uppercase tracking-widest text-brand-700 dark:text-brand-200">{{ status }}</p>
+  <p class="mt-6 text-sm font-bold uppercase tracking-widest text-brand-700 dark:text-brand-400">{{ status }}</p>
   <h1 class="mt-2 text-2xl font-bold">{{ i18n.translate(messageKey) }}</h1>
   @if (failed()) {
     <p class="mt-4 text-sm text-red-700 dark:text-red-300" role="status">{{ i18n.translate('recoveryFailed') }}</p>
