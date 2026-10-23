@@ -29,3 +29,7 @@ GitHub Actions is disabled by user request due to usage limits. Never add workfl
 ## Reliability hardening
 
 Read `docs/HARDENING.md` and `openapi/openapi.json` before changing API/auth/CRUD. A protected HTTP 401 must invalidate the client session and redirect to login; 403 must not discard the session. Never let stale session probe responses override newer logins. Cancel obsolete searches, commit cursor history only on success, and retry known expired cursors at the first page once. Update OpenAPI and TypeScript DTOs together; run `bun run contract:check`. New forms should reuse UiFormField, UiSelect, UiBreadcrumbs and timezone-aware input policies. Bun-only local verification; NEVER trigger GitHub Actions.
+
+## Paper visual-system standard
+
+Read `docs/PAPER_VISUAL_SYSTEM.md` before adding new UI modules. Maintain the compact operations toolbar/sidebar, cyan `brand-*` theme, semantic `app-panel`/`app-eyebrow`, Plus Jakarta Sans and JetBrains Mono for technical values. Honor persisted light/dark preferences, mobile navigation, focus, reduced motion and table-local scrolling. Use the external HTML template convention and avoid copying unrelated business logic or dependencies from the design reference. Never show fabricated KPIs/system status. No CI/Actions.

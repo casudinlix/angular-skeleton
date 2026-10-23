@@ -45,7 +45,7 @@ export class ${className}Page {
   readonly i18n = inject(I18nService);
 }
 `);
-writeFileSync(htmlFile, `<section class="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+writeFileSync(htmlFile, `<section class="app-panel p-5 sm:p-6">
   <h1 class="text-2xl font-bold">{{ i18n.translate('${key}') }}</h1>
 </section>
 `);

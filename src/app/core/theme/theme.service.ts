@@ -9,7 +9,7 @@ export class ThemeService {
   private readonly document = inject(DOCUMENT);
   private readonly storage = inject(PreferenceStorage);
   readonly theme = signal<ThemePreference>(
-    this.storage.read('skeleton.theme') === 'dark' ? 'dark' : 'light',
+    this.storage.read('skeleton.theme') === 'light' ? 'light' : 'dark',
   );
 
   constructor() { this.apply(); }

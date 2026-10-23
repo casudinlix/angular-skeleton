@@ -79,3 +79,9 @@ The previous skeleton has been merged to main. Hardening now lives on the separa
 OpenAPI 3.1: `openapi/openapi.json`. Validate contract/TypeScript field parity with `bun run contract:check`. Session recovery, 401/403 semantics, cancellation of obsolete HTTP searches and atomic cursor navigation are documented in `docs/HARDENING.md`.
 
 Shared UI includes UiFormField, UiSelect ControlValueAccessor, UiDateTimeInputDirective and UiBreadcrumbs. The reference customer CRUD editor now uses them. Native datetime-local values contain no timezone offset and need explicit interpretation before API submission.
+
+## Paper-style operations console
+
+The default visual direction now draws from the team's `paper-ai-studio-billing` concept: dense operations toolbar, dark slate surfaces, cyan highlights, Plus Jakarta Sans, JetBrains Mono metadata, compact cards and a mobile drawer. This is a **styling adaptation**, not a port of the billing feature set. The first-visit theme is dark; saved theme preferences and light mode continue to work. See [Paper Visual System](docs/PAPER_VISUAL_SYSTEM.md).
+
+To inspect locally: `bun run start`. GitHub Actions remains disabled per repository policy.
