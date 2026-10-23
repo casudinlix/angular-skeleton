@@ -66,7 +66,7 @@ export class ${className}Api {
   private readonly prefix = inject(PUBLIC_APP_CONFIG).apiPrefix;
   list(query: CursorQuery): Observable<CursorPage<${className}Record>> {
     // Integrate generated OpenAPI types and runtime validation before production use.
-    return this.http.get<CursorPage<${className}Record>>(`${this.prefix}/${name}`, {
+    return this.http.get<CursorPage<${className}Record>>(this.prefix + '/${name}', {
       params: { limit: query.limit, ...(query.cursor ? { cursor: query.cursor } : {}) },
     });
   }

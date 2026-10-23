@@ -9,10 +9,10 @@ test('public home and language toggle', async ({ page }) => {
 });
 test('unknown routes show 404', async ({ page }) => {
   await page.goto('/this-route-does-not-exist');
-  await expect(page.locator('h1')).toContainText('Page');
+  await expect(page.locator('h1')).toContainText('Halaman');
   await expect(page.getByText('404', { exact: true })).toBeVisible();
 });
-test('protected customers redirect to login without backend session', async ({ page }) => {
+test('protected customers redirect when session API is absent', async ({ page }) => {
   await page.goto('/customers');
   await expect(page).toHaveURL(/\/(login|500)/);
 });
