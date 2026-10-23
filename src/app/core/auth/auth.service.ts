@@ -13,13 +13,17 @@ export type SessionState =
   | { readonly status: 'unknown' | 'unavailable' | 'anonymous' }
   | { readonly status: 'authenticated'; readonly identity: Identity };
 
-function parseIdentity(value: unknown): Identity {
+export function parseIdentity(value: unknown): Identity {
   if (!isRecord(value) || typeof value['id'] !== 'string' ||
       typeof value['displayName'] !== 'string' || !Array.isArray(value['permissions']) ||
-      !value['permissions'].every((p: unknown) => typeof p === 'string')) {
+      !value['permissions'].every((permission: unknown) => typeof permission === 'string')) {
     throw new Error('Invalid session response');
   }
-  return { id: value['id'], displayName: value['displayName'], permissions: value['permissions'] as string[] };
+  return {
+    id: value['id'],
+    displayName: value['displayName'],
+    permissions: value['permissions'] as string[],
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +31,10 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly prefix = inject(PUBLIC_APP_CONFIG).apiPrefix;
   private readonly current = signal<SessionState>({ status: 'unknown' });
-  private loading: Promise<SessionState> | null = null;
+  private restoreInFlight: Promise<SessionState> | null = null;
+  // Reject stale session responses after login/logout/401.
+  private revision = 0;
+
   readonly state = this.current.asReadonly();
 
   get identity(): Identity | null {
@@ -35,32 +42,66 @@ export class AuthService {
     return value.status === 'authenticated' ? value.identity : null;
   }
 
-  has(permission: string): boolean { return this.identity?.permissions.includes(permission) ?? false; }
+  has(permission: string): boolean {
+    return this.identity?.permissions.includes(permission) ?? false;
+  }
 
-  async restore(): Promise<SessionState> {
-    if (this.current().status !== 'unknown') return this.current();
-    if (this.loading) return this.loading;
-    this.loading = (async () => {
+  async restore(force = false): Promise<SessionState> {
+    if (this.restoreInFlight) return this.restoreInFlight;
+    const status = this.current().status;
+    if (!force && status !== 'unknown' && status !== 'unavailable') return this.current();
+
+    const revision = ++this.revision;
+    const task: Promise<SessionState> = (async () => {
       try {
-        const response = await firstValueFrom(this.http.get<unknown>(`${this.prefix}/session`));
-        this.current.set({ status: 'authenticated', identity: parseIdentity(response) });
+        const payload = await firstValueFrom(this.http.get<unknown>(`${this.prefix}/session`));
+        const identity = parseIdentity(payload);
+        if (revision === this.revision) {
+          this.current.set({ status: 'authenticated', identity });
+        }
       } catch (error: unknown) {
-        this.current.set({ status: error instanceof ApiRequestError && error.status === 401
-          ? 'anonymous' : 'unavailable' });
+        if (revision === this.revision) {
+          this.current.set({
+            status: error instanceof ApiRequestError && error.status === 401
+              ? 'anonymous' : 'unavailable',
+          });
+        }
       }
       return this.current();
     })();
-    try { return await this.loading; } finally { this.loading = null; }
+
+    this.restoreInFlight = task;
+    try {
+      return await task;
+    } finally {
+      if (this.restoreInFlight === task) this.restoreInFlight = null;
+    }
+  }
+
+  retry(): Promise<SessionState> {
+    return this.restore(true);
   }
 
   async signIn(email: string, password: string): Promise<void> {
-    const response = await firstValueFrom(this.http.post<unknown>(`${this.prefix}/session`, { email, password }));
-    this.current.set({ status: 'authenticated', identity: parseIdentity(response) });
+    const revision = ++this.revision;
+    const payload = await firstValueFrom(
+      this.http.post<unknown>(`${this.prefix}/session`, { email, password }),
+    );
+    const identity = parseIdentity(payload);
+    if (revision === this.revision) {
+      this.current.set({ status: 'authenticated', identity });
+    }
   }
 
   async signOut(): Promise<void> {
+    const revision = ++this.revision;
+    // A failed server logout must not be represented as success.
     await firstValueFrom(this.http.delete<void>(`${this.prefix}/session`));
+    if (revision === this.revision) this.current.set({ status: 'anonymous' });
+  }
+
+  invalidate(): void {
+    ++this.revision;
     this.current.set({ status: 'anonymous' });
   }
-  invalidate(): void { this.current.set({ status: 'anonymous' }); }
 }
