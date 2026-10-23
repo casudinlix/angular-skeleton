@@ -16,7 +16,7 @@ The repository currently retains `package-lock.json` **only as an input to Bun's
 bun --version            # recommended: 1.4.4
 bun run lock:migrate     # bun install, create bun.lock, remove package-lock.json only after success
 bun install --frozen-lockfile
-git add package.json bunfig.toml bun.lock package-lock.json
+git add -A package.json bunfig.toml bun.lock package-lock.json
 git commit -m "build: complete Bun lockfile migration"
 ```
 
