@@ -62,5 +62,16 @@
   "errorMaintenance": "The application is under maintenance.",
   "retry": "Try again",
   "unauthorizedLink": "Sign in to your account",
-  "loadingSession": "Checking session..."
+  "loadingSession": "Checking session...",
+  "skipContent": "Skip to content",
+  "notifications": "Notifications",
+  "designSystemTitle": "Design system",
+  "designSystemDescription": "Semantic design tokens, accessible components, and dark mode.",
+  "apiTitle": "Typed REST and cursor",
+  "apiDescription": "Same-origin HTTP, runtime API validation, and backend-defined permissions.",
+  "developerTitle": "Feature-first structure",
+  "developerDescription": "External HTML templates, ID/EN JSON, and repeatable feature generation.",
+  "workspaceEyebrow": "SECURE WORKSPACE",
+  "customersEyebrow": "FEATURE / CUSTOMERS",
+  "loadingLabel": "Loading..."
 }

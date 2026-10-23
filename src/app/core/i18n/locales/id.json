@@ -62,5 +62,16 @@
   "errorMaintenance": "Aplikasi sedang dalam pemeliharaan.",
   "retry": "Coba kembali",
   "unauthorizedLink": "Masuk ke akun",
-  "loadingSession": "Memeriksa sesi..."
+  "loadingSession": "Memeriksa sesi...",
+  "skipContent": "Langsung ke konten",
+  "notifications": "Notifikasi",
+  "designSystemTitle": "Sistem desain",
+  "designSystemDescription": "Token warna semantik, komponen aksesibel, dan mode gelap.",
+  "apiTitle": "API bertipe dan cursor",
+  "apiDescription": "HTTP same-origin, validasi respons API, dan izin yang ditetapkan backend.",
+  "developerTitle": "Struktur berbasis fitur",
+  "developerDescription": "Template HTML terpisah, JSON ID/EN, serta generator fitur konsisten.",
+  "workspaceEyebrow": "RUANG KERJA AMAN",
+  "customersEyebrow": "MODUL / PELANGGAN",
+  "loadingLabel": "Memuat..."
 }
