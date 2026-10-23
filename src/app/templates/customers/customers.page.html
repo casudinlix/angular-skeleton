@@ -1,0 +1,113 @@
+<section class="min-w-0" aria-labelledby="customers-title">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-widest text-brand-700 dark:text-brand-200">{{ i18n.translate('customersEyebrow') }}</p>
+      <h1 id="customers-title" class="mt-2 text-3xl font-bold tracking-tight">{{ i18n.translate('customersTitle') }}</h1>
+      <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ i18n.translate('customersDescription') }}</p>
+    </div>
+    <button type="button" *hasPermission="'customers:create'" uiButton="primary" (click)="newCustomer()">
+      {{ i18n.translate('newCustomer') }}
+    </button>
+  </div>
+
+  <div class="mt-8 min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-5 dark:border-slate-800">
+      <label class="sr-only" for="customer-search">{{ i18n.translate('search') }}</label>
+      <input uiInput type="search" id="customer-search" [formControl]="search" [placeholder]="i18n.translate('search')"
+        class="w-full max-w-md rounded-lg border border-slate-300 bg-transparent px-4 py-2.5 text-sm dark:border-slate-700" />
+      <button type="button" uiButton="secondary" [disabled]="loading()" (click)="loadPage(null, true)">{{ i18n.translate('refresh') }}</button>
+    </div>
+    @if (loading()) {
+      <div class="px-5"><ui-loading-spinner [label]="i18n.translate('loading')" /></div>
+    } @else if (error()) {
+      <div role="alert" class="p-6 text-sm text-red-700 dark:text-red-300">{{ i18n.translate('customerApiError') }}</div>
+    } @else if (!items().length) {
+      <ui-empty-state [title]="i18n.translate('emptyCustomers')" [description]="i18n.translate('sessionNote')" />
+    } @else {
+      <div class="app-scroll-region min-w-0" role="region" tabindex="0" [attr.aria-label]="i18n.translate('customersTitle')">
+        <table uiDataTable class="w-full min-w-[38rem] text-left text-sm">
+          <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+            <tr>
+              <th scope="col" class="px-5 py-4">{{ i18n.translate('name') }}</th>
+              <th scope="col" class="px-5 py-4">{{ i18n.translate('email') }}</th>
+              <th scope="col" class="px-5 py-4">{{ i18n.translate('status') }}</th>
+              <th scope="col" class="px-5 py-4">{{ i18n.translate('actions') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items(); track item.id) {
+              <tr class="border-t border-slate-100 dark:border-slate-800">
+                <td class="px-5 py-4 font-semibold">{{ item.name }}</td>
+                <td class="app-break-anywhere px-5 py-4 text-slate-600 dark:text-slate-300">{{ item.email }}</td>
+                <td class="px-5 py-4">
+                  <span class="rounded-full px-2.5 py-1 text-xs font-semibold"
+                    [class.bg-emerald-50]="item.status === 'active'"
+                    [class.text-emerald-800]="item.status === 'active'"
+                    [class.bg-slate-100]="item.status !== 'active'"
+                    [class.text-slate-700]="item.status !== 'active'">
+                    {{ i18n.translate(item.status) }}
+                  </span>
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex gap-3">
+                    @if (auth.has('customers:update')) {
+                      <button type="button" class="text-sm font-semibold text-brand-700 hover:underline dark:text-brand-200"
+                        (click)="editCustomer(item)">{{ i18n.translate('edit') }}</button>
+                    }
+                    @if (auth.has('customers:delete')) {
+                      <button type="button" class="text-sm font-semibold text-red-700 hover:underline dark:text-red-300"
+                        (click)="confirmDelete(item)">{{ i18n.translate('delete') }}</button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    <div class="flex min-w-0 flex-wrap items-center justify-between gap-3 border-t border-slate-200 px-4 py-4 dark:border-slate-800 sm:px-5">
+      <button type="button" uiButton="secondary" class="min-w-0 flex-1 sm:flex-none" (click)="previous()" [disabled]="!history().length || loading()">{{ i18n.translate('previousPage') }}</button>
+      <button type="button" uiButton="secondary" class="min-w-0 flex-1 sm:flex-none" (click)="next()" [disabled]="!cursor() || loading()">{{ i18n.translate('nextPage') }}</button>
+    </div>
+  </div>
+</section>
+
+<dialog uiDialog #editorDialog class="app-dialog m-auto rounded-2xl border border-slate-200 bg-white p-0 text-slate-900 shadow-2xl backdrop:bg-slate-950/60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50">
+  <form [formGroup]="form" (ngSubmit)="save()" class="p-5 sm:p-7" novalidate>
+    <h2 class="text-xl font-bold">{{ editing() ? i18n.translate('editCustomer') : i18n.translate('newCustomer') }}</h2>
+    <div class="mt-6 space-y-4">
+      <div>
+        <label for="customer-name" class="mb-1.5 block text-sm font-medium">{{ i18n.translate('name') }}</label>
+        <input uiInput id="customer-name" formControlName="name" maxlength="120" class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700" />
+        @if (form.controls.name.touched && form.controls.name.invalid) { <p class="mt-1 text-xs text-red-600">{{ i18n.translate('required') }}</p> }
+      </div>
+      <div>
+        <label for="customer-email" class="mb-1.5 block text-sm font-medium">{{ i18n.translate('email') }}</label>
+        <input uiInput id="customer-email" type="email" formControlName="email" maxlength="254" class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700" />
+        @if (form.controls.email.touched && form.controls.email.invalid) { <p class="mt-1 text-xs text-red-600">{{ i18n.translate('invalidEmail') }}</p> }
+      </div>
+      <div>
+        <label for="customer-status" class="mb-1.5 block text-sm font-medium">{{ i18n.translate('status') }}</label>
+        <select uiInput id="customer-status" formControlName="status" class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700">
+          <option value="active">{{ i18n.translate('active') }}</option>
+          <option value="inactive">{{ i18n.translate('inactive') }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="mt-7 flex flex-wrap justify-end gap-2">
+      <button uiButton="secondary" type="button" (click)="closeEditor()">{{ i18n.translate('cancel') }}</button>
+      <button uiButton="primary" type="submit" [disabled]="saving() || form.invalid">{{ saving() ? i18n.translate('saving') : i18n.translate('save') }}</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog uiDialog #removeDialog class="app-dialog m-auto rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-2xl backdrop:bg-slate-950/60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50 sm:p-7">
+  <h2 class="text-xl font-bold">{{ i18n.translate('confirmDelete') }}</h2>
+  <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ i18n.translate('confirmDeleteDescription') }}</p>
+  <p class="mt-3 font-semibold">{{ pendingDelete()?.name }}</p>
+  <div class="mt-6 flex flex-wrap justify-end gap-2">
+    <button uiButton="secondary" type="button" (click)="closeRemoval()">{{ i18n.translate('cancel') }}</button>
+    <button uiButton="danger" type="button" (click)="remove()" [disabled]="saving()">{{ i18n.translate('delete') }}</button>
+  </div>
+</dialog>

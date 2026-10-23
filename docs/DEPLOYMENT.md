@@ -1,0 +1,29 @@
+# Frontend deployment
+
+Angular 22 authenticated CMS is a client-side rendered static application by default. The production build is typically served from `dist/angular-skeleton/browser`.
+
+## Reverse proxy requirements
+
+- HTTPS for every production origin, with HSTS only after HTTPS is confirmed.
+- Serve static assets with caching; fingerprinted build JS/CSS may use immutable caching.
+- SPA routes must fall back to `index.html` when they do not match a real static file.
+- `/api/*` must be proxied to the actual backend **before** the SPA fallback, retaining the correct cookie/session origin and request IDs.
+- Do not rewrite API 401, 403 or 500 errors into HTML.
+- Set a reviewed Content Security Policy, frame protection, Referrer-Policy and appropriate Permissions-Policy; validate each header against actual third-party dependencies.
+- Never bake credentials or server-side secrets into frontend environment files or `public/`.
+
+Dev only: `proxy.conf.json` forwards /api to localhost:3000. Adjust for your backend in development; this config is not automatically deployed.
+
+## Release
+
+1. Generate and commit `bun.lock`; perform `bun install --frozen-lockfile` with Bun 1.4.4 (and a Node.js version supported by Angular CLI).
+2. Run all gates in `docs/TESTING.md`, including E2E and server auth/isolation testing.
+3. Configure deployment origin, /api proxy, CSP, HTTPS, tenant-specific domain rules and 404 fallback.
+4. Promote the built asset as an immutable release, monitor frontend errors and maintain rollback capability.
+5. Restrict public folders to licensed and non-sensitive assets.
+
+## Google Fonts and CSP
+
+Plus Jakarta Sans is loaded using a Google Fonts stylesheet with `display=swap`; the UI still renders with system fonts if Google Fonts is blocked. Under a restrictive Content Security Policy, allow the reviewed stylesheet endpoint `https://fonts.googleapis.com` under `style-src` and the corresponding font files from `https://fonts.gstatic.com` under `font-src`. Do **not** weaken the rest of the CSP or enable broad `unsafe-inline` permissions merely to allow fonts. If corporate/offline delivery cannot make remote font requests, deploy properly licensed local subsets with `@font-face` and retain the fallback stack.
+
+Do not disable pinch zoom or text scaling. Test safe-area and viewport behavior on real Safari and Android devices in addition to the locally-run browser emulators.

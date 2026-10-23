@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # Dependency version PRs only. This is not a GitHub Actions workflow.
+  # Bun 1.4 lockfile support requires the text-based bun.lock, generated locally.
+  - package-ecosystem: bun
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      angular:
+        patterns: ["@angular/*", "@angular-devkit/*", "angular-eslint"]
+      tooling:
+        patterns: ["@types/*", "eslint*", "typescript*", "vitest", "jsdom", "prettier"]
