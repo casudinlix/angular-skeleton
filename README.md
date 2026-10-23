@@ -1,60 +1,102 @@
 # Angular Skeleton
 
-An Angular 22 standalone foundation with strict TypeScript, lazy feature routing, signals, typed API boundaries and cursor pagination.
+Reusable Angular 22 frontend foundation for admin panels and internal enterprise CMS. **Draft until the CI and lockfile checks pass.**
 
-## Folder structure
+Built with standalone components, zoneless rendering, signals, lazy-loaded routes, strict TypeScript, Tailwind CSS v4, JSON ID/EN i18n, typed API boundaries, form validation, accessible native dialogs, and cursor-based pagination.
 
-```text
-src/
-├── app/
-│   ├── core/
-│   │   ├── auth/
-│   │   ├── http/
-│   │   └── i18n/
-│   │       ├── i18n.service.ts
-│   │       └── locales/
-│   │           ├── id.json
-│   │           └── en.json
-│   ├── features/
-│   │   ├── home/         # TypeScript logic and tests
-│   │   ├── customers/    # API, models, UI logic
-│   │   └── errors/
-│   └── templates/
-│       ├── app/
-│       ├── home/
-│       ├── customers/
-│       └── errors/
-└── styles.css
-public/
-└── assets/
-    ├── branding/
-    ├── icons/
-    ├── images/
-    ├── illustrations/
-    └── fonts/
-```
+## Requirements
 
-- Each component uses `templateUrl` to point to the corresponding HTML file in `src/app/templates/<module>/`; logic stays in its feature folder.
-- Add user-visible text to both `src/app/core/i18n/locales/id.json` and `en.json`; `I18nService` provides typed lookup. The language switcher is in the global app header.
-- `public/` is copied to the built site's output root; add `public/assets/branding/logo.svg` to reference it at `/assets/branding/logo.svg`. See `public/ASSETS.md`.
-- Custom JSON translation lookup supports runtime switching. It is **not** Angular CLI's compile-time `@angular/localize` pipeline; locale-specific dates, currency, and plural rules need deliberate handling.
+- Node.js 22.22.3+ (alternatively compatible Node 24.15+ or Node 26), npm
+- Angular 22 / TypeScript >=6.0 <6.1
+- A real backend for authenticated features (default dev proxy http://localhost:3000)
 
-## Development
-
-Use Node.js compatible with Angular 22 and npm:
-
-```sh
+```bash
 npm install
 npm start
 npm run i18n:check
+npm run structure:check
 npm run check
 npm run lint
 npm test
 npm run build
+npm run e2e
 ```
 
-The `/customers` page requires a real `/api/customers` service returning `{ items, nextCursor }`. The demo `AuthService` exposes a client identity shape only; **it is not real authentication or authorization**. Implement and test server-backed sessions, CSRF controls, tenant isolation, and API permissions before production.
+**Important:** `package-lock.json` is not committed yet because npm registry was inaccessible during authoring. On a machine with npm access run `npm install` and commit the resulting lockfile before marking production-ready. CI temporarily uses `npm install` until the lockfile exists, then switches to `npm ci`.
 
-**Current verification:** GitHub file changes and configuration are committed in a draft PR, but `npm install`, lint, Angular template compilation, unit tests and full production build have not been verified because registry access is unavailable in this environment. No production-ready claim is made.
+## Architecture
 
-See `ARCHITECTURE.md`, `CODING_RULES.md`, `AGENTS.md`.
+```text
+src/app/
+├── app.ts                    # Top-level shell/controller
+├── app.routes.ts
+├── core/
+│   ├── auth/                 # Backend session + auth and permission guards
+│   ├── config/               # Public, non-secret runtime defaults
+│   ├── http/                 # Interceptors, cursor types, API errors
+│   ├── i18n/
+│   │   ├── locales/id.json
+│   │   ├── locales/en.json
+│   │   └── i18n.service.ts
+│   └── theme/
+├── features/
+│   ├── auth/                 # Login + validation
+│   ├── customers/            # Full reference CRUD and cursor table
+│   ├── errors/               # 401, 403, 404, 500, maintenance
+│   └── home/
+├── shared/ui/                # Button, Input, DataTable, Dialog, EmptyState,
+│                             # Skeleton, Spinner, Toast service/container
+└── templates/
+    ├── app/
+    ├── auth/
+    ├── customers/
+    ├── errors/
+    ├── home/
+    └── shared/
+public/assets/
+├── branding/
+├── icons/
+├── images/
+├── illustrations/
+└── fonts/
+tools/
+├── generate-feature.mjs      # Reliable npm feature generator
+└── schematics/               # Angular schematic collection
+```
+
+The user-selected convention keeps all HTML under `templates/<module>/` and TypeScript code in `features/<module>/`. `templateUrl` paths are relative to the component TypeScript file.
+
+## Features
+
+- Routes are lazy-loaded and protected only when a backend-verified session and permission is required.
+- API session: `GET /api/session`, `POST /api/session`, `DELETE /api/session`.
+- Customer API: `GET /api/customers`, `GET /api/customers/:id`, `POST /api/customers`, `PATCH /api/customers/:id`, `DELETE /api/customers/:id`.
+- Customer list supports debounced server search, cursor next/previous, empty/loading/error states, and permission-aware create/edit/delete actions.
+- Two languages (ID and EN) are compiled from JSON; locale switch persists preference in localStorage (never credentials). A timezone-aware formatter defaults to Asia/Jakarta.
+- Tailwind v4 supports dark mode and design tokens. Static assets in `public/` are copied to the site's root during build.
+
+## Generate a feature
+
+```bash
+npm run generate:feature -- orders
+```
+
+The generator creates `features/orders/*`, `templates/orders/orders.page.html`, a typed service/model starter, a basic unit test, a route with `orders:read` permission and new ID/EN translation keys.
+
+An Angular CLI schematic is also included under `tools/schematics/`; once Angular CLI is installed, it can be exercised with:
+
+```bash
+npx ng generate ./tools/schematics:feature --name orders --dry-run
+```
+
+Run **one** of the generators, not both. Check the generated contract and translation before use. Generator runtime and Angular CLI invocation are not verified in this environment.
+
+## Documents
+
+- [Architecture](ARCHITECTURE.md), [Coding Rules](CODING_RULES.md), [Agent Instructions](AGENTS.md)
+- [API contract](docs/API_CONTRACT.md), [UI design system](docs/UI_SYSTEM.md)
+- [Testing and release gates](docs/TESTING.md), [Deployment](docs/DEPLOYMENT.md), [Security](SECURITY.md)
+
+## Readiness
+
+Source is committed on PR #1, not merged to main. JSON and template path checks can be audited statically, but **installation, Angular compiler, lint, tests, E2E and production bundle were not run locally** due to unavailable npm registry and an older local Node version. Keep PR in draft until GitHub CI reports green, the lockfile is committed and a backend integration/security review has been performed.

@@ -1,13 +1,21 @@
-# Angular Skeleton Architecture
+# Architecture decision record: Angular skeleton
 
-- Angular standalone components, lazy feature routes, signals, strict TypeScript, and OnPush.
-- `features/<module>/` owns domain logic, route components, API services, models and tests.
-- `templates/<module>/` owns only that module's Angular HTML templates. Each `templateUrl` is **relative to the TypeScript component file**. This is an intentional organizational convention, although Angular's official style guide generally recommends colocation.
-- `core/` contains cross-cutting contracts only. Avoid domain-specific code in `core`.
-- `core/i18n/locales/id.json` and `en.json` hold small runtime-switchable dictionaries; `I18nService` is only a typed loader/lookup. Keep keys aligned using `npm run i18n:check`. Locale-sensitive formatting is a separate concern.
-- `public/assets/` holds static, public, build-copied resources. Never put credentials, private data or unoptimized user uploads there.
-- Typed APIs should follow OpenAPI contracts when backend integration begins.
-- Backend authoritatively validates authentication, tenant isolation and RBAC for every operation. Client guards are navigation aids, not security boundaries.
-- Cursor/keyset pagination, never OFFSET, is the default for large datasets.
-- API timestamps use timezone-qualified ISO 8601; user timezone should be explicit.
-- Require TypeScript checks, Angular template checks, unit tests, lint and production build before merging.
+## Why Angular
+Angular 22 standalone features, built-in DI, functional guards/interceptors, a production application builder and a well-defined testing pipeline offer a disciplined template for multiple internal applications.
+
+## Rules
+1. **Feature-first**: logic, models, services and tests live in `features/<module>/`. Reusable UI primitives go in `shared/ui/`; cross-cutting infrastructure belongs in `core/`.
+2. **External templates**: `templates/<module>/` contains all Angular HTML files. This intentionally differs from Angular's default colocated structure. Run `npm run structure:check` after moving TypeScript or HTML.
+3. **Secure-by-default navigation**: Angular route guards improve UX, but backend validates session/tenant/resource-level permissions. No fake login identity.
+4. **One origin**: frontend calls only `/api/*` with secure cookies. Dev server proxies to Bun backend on port 3000; production reverse proxy provides the same path. HttpClient uses Angular's built-in XSRF handling (cookie XSRF-TOKEN and header X-XSRF-TOKEN).
+5. **API boundary**: parse untrusted JSON in feature-specific adapters. Contract must be mirrored in an OpenAPI spec when integrating a real backend.
+6. **State**: signals for local synchronous UI, RxJS for HttpClient and lifecycle-bound subscriptions. No global megastore without demonstrated need.
+7. **Pagination**: opaque cursor/keyset contract, stable backend ordering, no OFFSET for large datasets; list refresh resets the pagination history.
+8. **Internationalization**: static typed JSON translations ID/EN, no inline dictionary in services. Intl for locale-aware numbers/dates, explicit Asia/Jakarta default timezone.
+9. **Visual system**: Tailwind v4 CSS-first with shared design tokens; native dialog improves keyboard/focus handling.
+10. **Quality**: Angular build template check, ESLint, Vitest, Playwright and npm audit as CI stages; lockfile mandatory for repeatability.
+
+## Explicit exclusions
+- No authentication backend, payment processing, tenant DB, or identity issuer inside this frontend repository.
+- Do not treat browser permissions, localStorage or frontend DTO types as trusted security controls.
+- SSR is not required for authenticated CMS; evaluate per product if a public SEO route is added.
