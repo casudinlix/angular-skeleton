@@ -1,4 +1,4 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -46,6 +46,24 @@ describe('AuthService session lifecycle', () => {
       permissions: ['customers:read'],
     });
     expect((await retry).status).toBe('authenticated');
+  });
+
+  it('preserves the session when a resource responds with 403', async () => {
+    const signedIn = auth.signIn('admin@example.test', 'password');
+    requests.expectOne('/api/session').flush({
+      id: 'admin',
+      displayName: 'Admin',
+      permissions: ['customers:read'],
+    });
+    await signedIn;
+    expect(auth.identity?.id).toBe('admin');
+
+    const http = TestBed.inject(HttpClient);
+    http.get('/api/customers').subscribe({ error: () => {} });
+    requests.expectOne('/api/customers').flush(
+      { code: 'FORBIDDEN' }, { status: 403, statusText: 'Forbidden' },
+    );
+    expect(auth.identity?.id).toBe('admin');
   });
 
   it('does not erase a newer sign-in when an older session probe gets 401', async () => {
