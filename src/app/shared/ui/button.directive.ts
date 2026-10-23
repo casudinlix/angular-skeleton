@@ -1,23 +1,18 @@
-import { Directive, input } from '@angular/core';
+import { computed, Directive, input } from '@angular/core';
 export type ButtonVariant = 'primary' | 'secondary' | 'danger';
+const variants: Record<ButtonVariant, string> = {
+  primary: 'border-brand-600 bg-brand-600 text-white hover:bg-brand-700',
+  secondary: 'border-slate-300 bg-white text-slate-900 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
+  danger: 'border-red-600 bg-red-600 text-white hover:bg-red-700',
+};
 @Directive({
   selector: 'button[uiButton], a[uiButton]',
   host: {
-    class: 'inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-    '[class.bg-brand-600]': "variant() === 'primary'",
-    '[class.hover:bg-brand-700]': "variant() === 'primary'",
-    '[class.text-white]': "variant() !== 'secondary'",
-    '[class.border-brand-600]': "variant() === 'primary'",
-    '[class.border-slate-300]': "variant() === 'secondary'",
-    '[class.bg-white]': "variant() === 'secondary'",
-    '[class.text-slate-900]': "variant() === 'secondary'",
-    '[class.dark:bg-slate-800]': "variant() === 'secondary'",
-    '[class.dark:text-slate-100]': "variant() === 'secondary'",
-    '[class.bg-red-600]': "variant() === 'danger'",
-    '[class.border-red-600]': "variant() === 'danger'",
-    '[class.hover:bg-red-700]': "variant() === 'danger'",
+    class: 'inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+    '[class]': 'variantClasses()',
   },
 })
 export class UiButtonDirective {
   readonly variant = input<ButtonVariant>('primary', { alias: 'uiButton' });
+  readonly variantClasses = computed(() => variants[this.variant()]);
 }
