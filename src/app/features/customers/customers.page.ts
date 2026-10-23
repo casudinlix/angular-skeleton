@@ -5,6 +5,7 @@ import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
+import { HasPermissionDirective } from '../../core/auth/has-permission.directive';
 import { I18nService } from '../../core/i18n/i18n.service';
 import { UiButtonDirective } from '../../shared/ui/button.directive';
 import { UiEmptyState } from '../../shared/ui/empty-state';
@@ -17,7 +18,7 @@ import { CustomerApi } from './customer.api';
 import { Customer, CustomerInput } from './customer.types';
 
 @Component({
-  imports: [ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner, UiInputDirective, UiDataTableDirective, UiDialogDirective],
+  imports: [ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner, UiInputDirective, UiDataTableDirective, UiDialogDirective, HasPermissionDirective],
   templateUrl: '../../templates/customers/customers.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
