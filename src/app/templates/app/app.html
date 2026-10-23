@@ -1,1 +1,20 @@
+<header class="site-header">
+  <nav class="app-navigation" aria-label="Primary">
+    <a routerLink="/" class="app-brand">{{ i18n.translate('appName') }}</a>
+    <a routerLink="/customers">{{ i18n.translate('customersTitle') }}</a>
+  </nav>
+
+  <div class="locale-picker">
+    <label for="app-language">{{ i18n.translate('language') }}</label>
+    <select
+      id="app-language"
+      #languageSelect
+      [value]="i18n.language()"
+      (change)="setLanguage(languageSelect.value)"
+    >
+      <option value="id">Bahasa Indonesia</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+</header>
 <router-outlet />
