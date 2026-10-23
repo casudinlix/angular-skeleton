@@ -49,5 +49,6 @@
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || ^26.0.0"
   },
-  "schematics": "./tools/schematics/collection.json"
+  "schematics": "./tools/schematics/collection.json",
+  "packageManager": "npm@11.19.1"
 }

@@ -9,19 +9,23 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22.22.3'
-      - name: Install dependencies (temporary until lockfile exists)
+      - name: Use patched npm 11
+        run: npm install --global npm@11.19.1
+      - name: Install dependencies
         run: |
+          node --version
+          npm --version
           if [ -f package-lock.json ]; then
             npm ci --no-audit --no-fund
           else
             npm install --no-audit --no-fund
-            echo "::warning::package-lock.json not committed; commit it for reproducible installs."
+            echo "::warning::Commit package-lock.json after dependencies resolve."
           fi
       - run: npm run i18n:check
       - run: npm run structure:check
@@ -31,12 +35,14 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
   e2e:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22.22.3'
+      - name: Use patched npm 11
+        run: npm install --global npm@11.19.1
       - run: |
           if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
       - run: npx playwright install --with-deps chromium
