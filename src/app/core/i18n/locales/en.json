@@ -1,0 +1,18 @@
+{
+  "appName": "Angular Skeleton",
+  "language": "Language",
+  "homeTitle": "Enterprise application foundation",
+  "homeDescription": "Standalone components, lazy routes, signals, and strict TypeScript.",
+  "counterLabel": "Signal counter",
+  "customersLink": "Customer API example",
+  "customersTitle": "Customers",
+  "customersDescription": "Typed API with server-side cursor pagination. Requires the /api/customers endpoint.",
+  "refresh": "Refresh",
+  "loading": "Loading...",
+  "emptyCustomers": "No customers found.",
+  "nextPage": "Next page",
+  "backToHome": "Back to home",
+  "notFoundTitle": "Page not found",
+  "notFoundDescription": "The requested page does not exist.",
+  "customerApiError": "API unavailable. Configure /api/customers."
+}
