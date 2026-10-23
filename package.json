@@ -3,12 +3,12 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "start": "ng serve --configuration development",
-    "build": "ng build --configuration production",
-    "check": "ng build --configuration development",
+    "start": "node scripts/check-angular-toolchain.mjs && ng serve --configuration development",
+    "build": "node scripts/check-angular-toolchain.mjs && ng build --configuration production",
+    "check": "node scripts/check-angular-toolchain.mjs && ng build --configuration development",
     "lint": "eslint . --max-warnings=0",
-    "test": "ng test --watch=false",
-    "test:coverage": "ng test --watch=false --coverage",
+    "test": "node scripts/check-angular-toolchain.mjs && ng test --watch=false",
+    "test:coverage": "node scripts/check-angular-toolchain.mjs && ng test --watch=false --coverage",
     "e2e": "playwright test",
     "i18n:check": "node scripts/validate-i18n.mjs",
     "structure:check": "node scripts/check-structure.mjs",
@@ -17,7 +17,8 @@
     "format:check": "prettier --check 'src/**/*.{ts,html,css,json}' 'tools/**/*.{mjs,cjs,json}'",
     "layout:check": "node scripts/check-layout.mjs",
     "lock:migrate": "bun install && node scripts/finalize-bun-migration.mjs",
-    "contract:check": "node scripts/check-openapi.mjs"
+    "contract:check": "node scripts/check-openapi.mjs",
+    "toolchain:check": "node scripts/check-angular-toolchain.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
@@ -33,7 +34,7 @@
     "@angular/build": "^22.0.0",
     "@angular/cli": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
-    "typescript": "~7.0.2",
+    "typescript": "~6.0.3",
     "vitest": "^5.0.5",
     "eslint": "^10.13.0",
     "angular-eslint": "^22.0.0",
