@@ -1,29 +1,28 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import idMessages from './locales/id.json';
 import enMessages from './locales/en.json';
 
 export type Language = 'id' | 'en';
 export type TranslationKey = keyof typeof idMessages;
-
-// Missing translation keys are rejected by TypeScript during compilation.
-const messages: Record<Language, Record<TranslationKey, string>> = {
-  id: idMessages,
-  en: enMessages,
-};
+const dictionaries: Record<Language, Record<TranslationKey, string>> = { id: idMessages, en: enMessages };
 
 @Injectable({ providedIn: 'root' })
 export class I18nService {
   private readonly document = inject(DOCUMENT);
+  private readonly storage = this.document.defaultView?.localStorage;
+  readonly language = signal<Language>(this.storage?.getItem('skeleton.language') === 'en' ? 'en' : 'id');
+  readonly locale = computed(() => this.language() === 'id' ? 'id-ID' : 'en-US');
 
-  readonly language = signal<Language>('id');
+  constructor() { this.document.documentElement.lang = this.language(); }
 
   translate(key: TranslationKey): string {
-    return messages[this.language()][key];
+    return dictionaries[this.language()][key] || dictionaries.id[key];
   }
 
-  setLanguage(language: Language): void {
-    this.language.set(language);
-    this.document.documentElement.lang = language;
+  setLanguage(value: Language): void {
+    this.language.set(value);
+    this.document.documentElement.lang = value;
+    try { this.storage?.setItem('skeleton.language', value); } catch { /* optional storage */ }
   }
 }
