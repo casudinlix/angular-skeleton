@@ -31,3 +31,11 @@ Accessibility and responsive regressions are detected through `scripts/check-lay
 - Bun **1.4.4** is the canonical dependency manager and script runner. Node.js remains required by the Angular CLI at its supported version; do not force `bunx --bun` on the Angular CLI.
 - `package-lock.json` is retained temporarily solely as a migration seed because a networked Bun environment was unavailable during this change. Execute `bun run lock:migrate` locally, inspect `bun.lock`, then commit the new lockfile and removal of the old file.
 - GitHub Actions automatic workflows are removed at the user's request. Use local quality checks. Do not re-enable CI without authorization.
+
+## Hardening decisions
+
+- Session restoration uses an operation revision to reject stale responses and supports user-triggered retry. The HTTP interceptor invalidates protected API 401, not 403, and exempts GET/POST session probes from global invalidation to protect newer login state.
+- PreferenceStorage handles blocked localStorage access gracefully, storing only language/theme preferences.
+- Customer list requests are cancelled through RxJS unsubscription and cursor/history state advances only after successful responses; known cursor expiry restarts at first page.
+- Machine contract is `openapi/openapi.json`; local `bun run contract:check` validates structural/field alignment. Full type generation and backend contract testing require actual Bun/backend environments.
+- Reusable UiFormField, UiSelect ControlValueAccessor, native DateTime and breadcrumbs follow external template convention.
