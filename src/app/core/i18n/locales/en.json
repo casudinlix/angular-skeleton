@@ -81,5 +81,8 @@
   "closeMenu": "Close navigation menu",
   "footerFoundation": "Cross-product application foundation",
   "foundationCard": "Foundation",
-  "styleDirection": "Operations interface system"
+  "styleDirection": "Operations interface system",
+  "demoMode": "DEMO MODE / SYNTHETIC DATA",
+  "demoLoginHint": "Demo-only account for exploring pages and CRUD without a backend:",
+  "demoResetHint": "Demo data exists only while the demo server runs. Never use for real data."
 }

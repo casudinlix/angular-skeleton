@@ -50,6 +50,17 @@
               "optimization": false,
               "sourceMap": true,
               "extractLicenses": false
+            },
+            "demo": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/app/core/config/demo-mode.ts",
+                  "with": "src/app/core/config/demo-mode.enabled.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -66,6 +77,9 @@
             },
             "production": {
               "buildTarget": "angular-skeleton:build:production"
+            },
+            "demo": {
+              "buildTarget": "angular-skeleton:build:demo"
             }
           },
           "defaultConfiguration": "development"

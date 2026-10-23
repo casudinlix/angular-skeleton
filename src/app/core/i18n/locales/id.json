@@ -81,5 +81,8 @@
   "closeMenu": "Tutup menu navigasi",
   "footerFoundation": "Fondasi aplikasi lintas produk",
   "foundationCard": "Fondasi",
-  "styleDirection": "Sistem antarmuka operasional"
+  "styleDirection": "Sistem antarmuka operasional",
+  "demoMode": "MODE DEMO / DATA SINTETIS",
+  "demoLoginHint": "Akun khusus untuk mencoba halaman dan CRUD tanpa backend:",
+  "demoResetHint": "Data demo hanya tersimpan selama server demo berjalan. Jangan gunakan untuk data nyata."
 }

@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { I18nService } from './core/i18n/i18n.service';
 import { AuthService } from './core/auth/auth.service';
 import { ThemeService } from './core/theme/theme.service';
+import { DEMO_MODE } from './core/config/demo-mode';
 import { ToastService } from './shared/ui/toast.service';
 import { UiToastContainer } from './shared/ui/toast-container';
 
@@ -18,6 +19,7 @@ export class App {
   readonly theme = inject(ThemeService);
   readonly toast = inject(ToastService);
   readonly menuOpen = signal(false);
+  readonly demoMode = DEMO_MODE;
   private readonly router = inject(Router);
 
   setLanguage(value: string): void {

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { DEMO_MODE } from '../../core/config/demo-mode';
 import { I18nService } from '../../core/i18n/i18n.service';
 import { UiInputDirective } from '../../shared/ui/input.directive';
 import { UiButtonDirective } from '../../shared/ui/button.directive';
@@ -17,6 +18,7 @@ export class LoginPage {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  readonly demoMode = DEMO_MODE;
   readonly busy = signal(false);
   readonly failed = signal(false);
   readonly form = this.fb.group({
