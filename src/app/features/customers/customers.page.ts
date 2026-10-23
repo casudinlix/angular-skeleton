@@ -1,5 +1,5 @@
 import {
-  ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild,
+  ChangeDetectionStrategy, Component, DestroyRef, ElementRef, computed, inject, signal, viewChild,
 } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -9,6 +9,9 @@ import { HasPermissionDirective } from '../../core/auth/has-permission.directive
 import { ApiRequestError } from '../../core/http/api.types';
 import { I18nService } from '../../core/i18n/i18n.service';
 import { UiButtonDirective } from '../../shared/ui/button.directive';
+import { UiFormField } from '../../shared/ui/form-field';
+import { UiSelect, UiSelectOption } from '../../shared/ui/select';
+import { UiBreadcrumbs, BreadcrumbItem } from '../../shared/ui/breadcrumbs';
 import { UiDataTableDirective } from '../../shared/ui/data-table.directive';
 import { UiDialogDirective } from '../../shared/ui/dialog.directive';
 import { UiEmptyState } from '../../shared/ui/empty-state';
@@ -22,6 +25,7 @@ import { Customer, CustomerInput } from './customer.types';
   imports: [
     ReactiveFormsModule, UiButtonDirective, UiEmptyState, UiLoadingSpinner,
     UiInputDirective, UiDataTableDirective, UiDialogDirective, HasPermissionDirective,
+    UiFormField, UiSelect, UiBreadcrumbs,
   ],
   templateUrl: '../../templates/customers/customers.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +40,14 @@ export class CustomersPage {
   private readonly editor = viewChild<ElementRef<HTMLDialogElement>>('editorDialog');
   private readonly removal = viewChild<ElementRef<HTMLDialogElement>>('removeDialog');
 
+  readonly breadcrumbs = computed<readonly BreadcrumbItem[]>(() => [
+    { label: this.i18n.translate('overview'), url: '/' },
+    { label: this.i18n.translate('customersTitle') },
+  ]);
+  readonly statusOptions = computed<readonly UiSelectOption[]>(() => [
+    { value: 'active', label: this.i18n.translate('active') },
+    { value: 'inactive', label: this.i18n.translate('inactive') },
+  ]);
   readonly search = new FormControl('', { nonNullable: true });
   readonly form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120)]],

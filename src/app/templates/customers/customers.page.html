@@ -1,3 +1,4 @@
+<ui-breadcrumbs [items]="breadcrumbs()" />
 <section class="min-w-0" aria-labelledby="customers-title">
   <div class="flex flex-wrap items-start justify-between gap-4">
     <div>
@@ -77,23 +78,23 @@
   <form [formGroup]="form" (ngSubmit)="save()" class="p-5 sm:p-7" novalidate>
     <h2 class="text-xl font-bold">{{ editing() ? i18n.translate('editCustomer') : i18n.translate('newCustomer') }}</h2>
     <div class="mt-6 space-y-4">
-      <div>
-        <label for="customer-name" class="mb-1.5 block text-sm font-medium">{{ i18n.translate('name') }}</label>
-        <input uiInput id="customer-name" formControlName="name" maxlength="120" class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700" />
-        @if (form.controls.name.touched && form.controls.name.invalid) { <p class="mt-1 text-xs text-red-600">{{ i18n.translate('required') }}</p> }
-      </div>
-      <div>
-        <label for="customer-email" class="mb-1.5 block text-sm font-medium">{{ i18n.translate('email') }}</label>
-        <input uiInput id="customer-email" type="email" formControlName="email" maxlength="254" class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700" />
-        @if (form.controls.email.touched && form.controls.email.invalid) { <p class="mt-1 text-xs text-red-600">{{ i18n.translate('invalidEmail') }}</p> }
-      </div>
-      <div>
-        <label for="customer-status" class="mb-1.5 block text-sm font-medium">{{ i18n.translate('status') }}</label>
-        <select uiInput id="customer-status" formControlName="status" class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700">
-          <option value="active">{{ i18n.translate('active') }}</option>
-          <option value="inactive">{{ i18n.translate('inactive') }}</option>
-        </select>
-      </div>
+      <ui-form-field controlId="customer-name" [label]="i18n.translate('name')" [required]="true"
+        [error]="form.controls.name.touched && form.controls.name.invalid ? i18n.translate('required') : ''">
+        <input uiInput id="customer-name" formControlName="name" maxlength="120" required
+          [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid"
+          [attr.aria-describedby]="form.controls.name.touched && form.controls.name.invalid ? 'customer-name-error' : null"
+          class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700" />
+      </ui-form-field>
+      <ui-form-field controlId="customer-email" [label]="i18n.translate('email')" [required]="true"
+        [error]="form.controls.email.touched && form.controls.email.invalid ? i18n.translate(form.controls.email.hasError('email') ? 'invalidEmail' : 'required') : ''">
+        <input uiInput id="customer-email" type="email" formControlName="email" maxlength="254" required
+          [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+          [attr.aria-describedby]="form.controls.email.touched && form.controls.email.invalid ? 'customer-email-error' : null"
+          class="w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2.5 dark:border-slate-700" />
+      </ui-form-field>
+      <ui-form-field controlId="customer-status" [label]="i18n.translate('status')">
+        <ui-select controlId="customer-status" formControlName="status" [options]="statusOptions()" />
+      </ui-form-field>
     </div>
     <div class="mt-7 flex flex-wrap justify-end gap-2">
       <button uiButton="secondary" type="button" (click)="closeEditor()">{{ i18n.translate('cancel') }}</button>
