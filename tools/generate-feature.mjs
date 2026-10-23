@@ -84,7 +84,7 @@ describe('${className}Page', () => {
   });
 });
 `);
-const newRoute = `  { path: '${name}', canActivate: [authGuard, permissionGuard],
+const newRoute = `  { path: '${name}', canActivate: [authPermissionGuard],
     data: { permission: '${name}:read' },
     loadComponent: () => import('./features/${name}/${name}.page').then(m => m.${className}Page) },
 `;

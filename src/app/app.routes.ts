@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { authGuard, permissionGuard } from './core/auth/auth.guard';
+import { authPermissionGuard } from './core/auth/auth.guard';
 export const routes: Routes = [
   { path: '', title: 'Overview', loadComponent: () => import('./features/home/home.page').then(m => m.HomePage) },
   { path: 'login', title: 'Sign in', loadComponent: () => import('./features/auth/login.page').then(m => m.LoginPage) },
-  { path: 'customers', title: 'Customers', canActivate: [authGuard, permissionGuard],
+  { path: 'customers', title: 'Customers', canActivate: [authPermissionGuard],
     data: { permission: 'customers:read' },
     loadComponent: () => import('./features/customers/customers.page').then(m => m.CustomersPage) },
   // FEATURE_ROUTE_ANCHOR

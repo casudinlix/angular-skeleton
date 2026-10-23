@@ -60,7 +60,7 @@ describe('${className}Page', () => {
   });
 });
 `);
-    const route = `  { path: '${name}', canActivate: [authGuard, permissionGuard],
+    const route = `  { path: '${name}', canActivate: [authPermissionGuard],
     data: { permission: '${name}:read' },
     loadComponent: () => import('./features/${name}/${name}.page').then(m => m.${className}Page) },
 `;
