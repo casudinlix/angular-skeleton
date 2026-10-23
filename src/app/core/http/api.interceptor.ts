@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { ApiRequestError, isRecord } from './api.types';
@@ -8,6 +9,7 @@ import { ApiRequestError, isRecord } from './api.types';
 export const apiInterceptor: HttpInterceptorFn = (request, next) => {
   const document = inject(DOCUMENT);
   const auth = inject(AuthService);
+  const router = inject(Router);
   const origin = document.location?.origin ?? 'http://localhost';
   const url = new URL(request.url, origin);
 
@@ -20,7 +22,14 @@ export const apiInterceptor: HttpInterceptorFn = (request, next) => {
 
       // Global session invalidation; individual features can now react to auth.state().
       // Do not invalidate on permission-denied 403: the session may still be valid.
-      if (error.status === 401) auth.invalidate();
+      if (error.status === 401) {
+        auth.invalidate();
+        // The route guard handles GET /api/session while entering protected pages.
+        // For a session expiring during an already-open feature, return to sign-in.
+        if (url.pathname !== '/api/session' && !router.url.startsWith('/login')) {
+          void router.navigate(['/login'], { queryParams: { returnUrl: router.url } });
+        }
+      }
 
       const payload: unknown = error.error;
       const code = isRecord(payload) && typeof payload['code'] === 'string'
