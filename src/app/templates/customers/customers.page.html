@@ -1,17 +1,19 @@
 <main class="page-content" aria-labelledby="customers-title">
-  <h1 id="customers-title">Customers</h1>
-  <p>Typed API with server-side cursor pagination. Requires the /api/customers endpoint.</p>
+  <h1 id="customers-title">{{ i18n.translate('customersTitle') }}</h1>
+  <p>{{ i18n.translate('customersDescription') }}</p>
 
   <div class="page-actions">
-    <button type="button" (click)="load()" [disabled]="loading()">Refresh</button>
+    <button type="button" (click)="load()" [disabled]="loading()">
+      {{ i18n.translate('refresh') }}
+    </button>
   </div>
 
   @if (loading()) {
-    <p role="status" aria-live="polite">Loading...</p>
+    <p role="status" aria-live="polite">{{ i18n.translate('loading') }}</p>
   } @else if (error()) {
-    <p role="alert">{{ error() }}</p>
+    <p role="alert">{{ i18n.translate('customerApiError') }}</p>
   } @else if (!items().length) {
-    <p>No customers found.</p>
+    <p>{{ i18n.translate('emptyCustomers') }}</p>
   } @else {
     <ul class="customer-list">
       @for (item of items(); track item.id) {
@@ -25,8 +27,8 @@
 
   <div class="page-actions">
     <button type="button" (click)="next()" [disabled]="loading() || !cursor()">
-      Next page
+      {{ i18n.translate('nextPage') }}
     </button>
-    <a routerLink="/">Back to home</a>
+    <a routerLink="/">{{ i18n.translate('backToHome') }}</a>
   </div>
 </main>
