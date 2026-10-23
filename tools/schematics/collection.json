@@ -1,0 +1,10 @@
+{
+  "$schema": "../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "feature": {
+      "description": "Generate feature-first Angular page and module templates",
+      "factory": "./feature/index.cjs#feature",
+      "schema": "./feature/schema.json"
+    }
+  }
+}
