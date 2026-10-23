@@ -48,3 +48,9 @@ Prefer `{"code":"CUSTOMER_NOT_FOUND","message":"Not found"}` with appropriate st
 Every endpoint must authorize the current identity AND its tenant/resource scope. Never trust permissions merely supplied in client JSON. For multi-tenant databases, enforce tenant filtering even on GET/:id, UPDATE and DELETE. Add API contract tests and end-to-end auth/permission/CSRF tests against the real backend before deployment.
 
 For SDK generation later, publish an OpenAPI 3.1 document and replace handwritten feature DTOs while retaining validation at trust boundaries.
+
+## Machine-readable source of truth
+
+OpenAPI 3.1 schema now lives at `openapi/openapi.json` and covers the session and customers reference endpoints, error bodies, opaque cursors, cookie authentication and CSRF header. Run `bun run contract:check` after schema/DTO changes. Current TypeScript DTOs are handwritten but checked for field names; full SDK code generation can be integrated after the Bun lockfile is finalized.
+
+Session probe retry is explicit, protected API 401 invalidates frontend identity, and 403 does not. Cursor GET on 400/410/422 may recover at the first page once; no automatic retries for mutations or rate limiting.
