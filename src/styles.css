@@ -1,21 +1,14 @@
-/* Minimal framework-neutral styling until the shared design system is introduced. */
-:root { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #0f172a; background: #f8fafc; }
-* { box-sizing: border-box; }
-body { margin: 0; }
-a { color: #047857; }
-button, select { font: inherit; }
-button { cursor: pointer; border: 1px solid #047857; color: white; background: #047857; border-radius: 0.5rem; padding: 0.65rem 1rem; }
-button:disabled { cursor: not-allowed; opacity: 0.5; }
-select { padding: 0.5rem; border: 1px solid #94a3b8; border-radius: 0.4rem; background: white; }
-:focus-visible { outline: 3px solid #059669; outline-offset: 3px; }
-.site-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem max(1.5rem, calc((100vw - 70rem) / 2)); background: white; border-bottom: 1px solid #e2e8f0; }
-.app-navigation, .locale-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
-.app-brand { font-weight: 750; text-decoration: none; color: #0f172a; }
-.page-content { max-width: 70rem; margin: 4rem auto; padding: 2rem; }
-.eyebrow { text-transform: uppercase; letter-spacing: 0.12em; color: #047857; font-size: 0.8rem; font-weight: bold; }
-h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; }
-.page-content > p { max-width: 46rem; line-height: 1.65; }
-.page-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; margin: 1.5rem 0; }
-.customer-list { max-width: 45rem; padding: 0; list-style: none; }
-.customer-list li { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem; border-bottom: 1px solid #cbd5e1; }
-@media (max-width: 640px) { .site-header { padding: 1rem; } .page-content { margin: 2rem auto; padding: 1rem; } .customer-list li { flex-direction: column; } }
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-brand-50: #edfdf7; --color-brand-100: #d1fae9; --color-brand-200: #a6f4d4;
+  --color-brand-500: #12b886; --color-brand-600: #0d986e; --color-brand-700: #087b5a;
+  --color-brand-800: #075c48; --color-brand-900: #064a3a;
+}
+:root { font-family: var(--font-sans); color-scheme: light; }
+:root.dark { color-scheme: dark; }
+body { margin: 0; min-width: 320px; }
+button, select, input { font: inherit; }
+:focus-visible { outline: 3px solid #10b981; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }

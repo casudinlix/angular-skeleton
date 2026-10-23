@@ -1,14 +1,19 @@
 {
   "name": "angular-skeleton",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
-    "start": "ng serve",
-    "build": "ng build",
-    "lint": "eslint .",
-    "check": "tsc --noEmit -p tsconfig.app.json",
+    "start": "ng serve --configuration development",
+    "build": "ng build --configuration production",
+    "check": "ng build --configuration development",
+    "lint": "eslint . --max-warnings=0",
     "test": "ng test --watch=false",
-    "i18n:check": "node scripts/validate-i18n.mjs"
+    "test:coverage": "ng test --watch=false --coverage",
+    "e2e": "playwright test",
+    "i18n:check": "node scripts/validate-i18n.mjs",
+    "structure:check": "node scripts/check-structure.mjs",
+    "quality": "npm run i18n:check && npm run structure:check && npm run lint && npm test && npm run build",
+    "generate:feature": "node tools/generate-feature.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
@@ -17,18 +22,30 @@
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
     "rxjs": "^7.8.0",
-    "tslib": "^2.8.0"
+    "tslib": "^2.8.0",
+    "@angular/forms": "^22.0.0"
   },
   "devDependencies": {
     "@angular/build": "^22.0.0",
     "@angular/cli": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
     "typescript": "~6.0.0",
-    "vitest": "^3.2.0",
+    "vitest": "^4.0.0",
     "eslint": "^9.0.0",
     "angular-eslint": "^22.0.0",
     "typescript-eslint": "^8.0.0",
     "@eslint/js": "^9.0.0",
-    "jsdom": "^26.0.0"
+    "jsdom": "^27.0.0",
+    "@angular-devkit/core": "^22.0.0",
+    "@angular-devkit/schematics": "^22.0.0",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@playwright/test": "^1.55.0",
+    "eslint-config-prettier": "^10.1.0",
+    "prettier": "^3.6.0",
+    "tailwindcss": "^4.1.0"
+  },
+  "type": "module",
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || ^26.0.0"
   }
 }
