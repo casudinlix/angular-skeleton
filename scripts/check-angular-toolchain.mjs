@@ -22,7 +22,7 @@ try {
     && typeof ts.readConfigFile === 'function'
     && typeof ts.createProgram === 'function';
 
-  if (!/^6\\.0\\.\\d+(?:[-+].*)?$/.test(installed) || !hasCompilerApi) {
+  if (!/^6[.]0[.][0-9]+(?:[-+].*)?$/.test(installed) || !hasCompilerApi) {
     issues.push(
       `Incompatible TypeScript ${installed} or missing TypeScript Compiler API. `
       + 'Angular 22 requires TypeScript >=6.0.0 <6.1.0. '
