@@ -39,3 +39,12 @@
 - Machine contract: `openapi/openapi.json`. Update API definitions, runtime DTO parsing and field parity together, then run `bun run contract:check`.
 - Form UI uses UiFormField for labels/errors, UiSelect ControlValueAccessor for reactive forms, UiBreadcrumbs and native date/time controls. Do not treat datetime-local strings as UTC without an explicit timezone.
 - Run only LOCAL Bun quality checks. CI/GitHub Actions remains off.
+
+## Visual system: Paper operations console
+
+- New UIs must follow `docs/PAPER_VISUAL_SYSTEM.md`: dark-first, cyan accents, compact header and navigation, slim bordered data cards and deliberate data density.
+- Reuse CSS-first Tailwind v4 design tokens and shared `app-panel`/`app-eyebrow` styles. Avoid per-module conflicting hex values.
+- Plus Jakarta Sans for content and JetBrains Mono for technical metadata. Both need offline system fallbacks.
+- Light mode must remain legible; CSS semantics must account for both light and dark. Honor saved preferences and test both.
+- Do not import Angular Material, chart libraries, React or billing runtime packages just to reproduce the reference aesthetic. New dependencies require a separate verified need.
+- Preserve all routes, HTTP contracts, permissions, forms and localized UI during restyles. Do not invent financial metrics or live network statuses.
