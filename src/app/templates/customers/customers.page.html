@@ -41,17 +41,11 @@
                 <td class="px-5 py-4 font-semibold">{{ item.name }}</td>
                 <td class="app-break-anywhere px-5 py-4 text-slate-600 dark:text-slate-300">{{ item.email }}</td>
                 <td class="px-5 py-4">
-                  <span class="rounded-md border border-transparent px-2.5 py-1 text-[.6875rem] font-semibold"
-                    [class.bg-emerald-50]="item.status === 'active'"
-                    [class.text-emerald-800]="item.status === 'active'"
-                    [class.dark:bg-emerald-950]="item.status === 'active'"
-                    [class.dark:text-emerald-300]="item.status === 'active'"
-                    [class.bg-slate-100]="item.status !== 'active'"
-                    [class.text-slate-700]="item.status !== 'active'"
-                    [class.dark:bg-slate-800]="item.status !== 'active'"
-                    [class.dark:text-slate-300]="item.status !== 'active'">
-                    {{ i18n.translate(item.status) }}
-                  </span>
+                  @if (item.status === 'active') {
+                    <span class="inline-flex rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[.6875rem] font-semibold text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">{{ i18n.translate(item.status) }}</span>
+                  } @else {
+                    <span class="inline-flex rounded-md border border-slate-200 bg-slate-100 px-2.5 py-1 text-[.6875rem] font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">{{ i18n.translate(item.status) }}</span>
+                  }
                 </td>
                 <td class="px-5 py-4">
                   <div class="flex gap-3">

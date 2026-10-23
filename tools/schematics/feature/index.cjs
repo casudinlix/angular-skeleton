@@ -34,7 +34,7 @@ import { I18nService } from '../../core/i18n/i18n.service';
 })
 export class ${className}Page { readonly i18n = inject(I18nService); }
 `);
-    tree.create(templatePath, `<section class="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 sm:p-6"><h1 class="app-break-anywhere text-2xl font-bold">{{ i18n.translate('${key}') }}</h1></section>\n`);
+    tree.create(templatePath, `<section class="app-panel p-5 sm:p-6"><h1 class="app-break-anywhere text-2xl font-bold">{{ i18n.translate('${key}') }}</h1></section>\n`);
     tree.create(prefix + '.types.ts', `export interface ${className}Record { readonly id: string; readonly name: string; }\n`);
     tree.create(prefix + '.api.ts', `import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';

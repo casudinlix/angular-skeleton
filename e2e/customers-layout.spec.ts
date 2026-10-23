@@ -68,6 +68,9 @@ test('customer tables scroll locally and dialogs stay usable on small screens', 
 test('mobile navigation, accessible contrast mode and locale survive reload', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('html')).toHaveClass(/dark/);
+  await page.getByRole('button', { name: /ubah tema|toggle theme/i }).click();
+  await expect(page.locator('html')).not.toHaveClass(/dark/);
   await page.getByRole('button', { name: /ubah tema|toggle theme/i }).click();
   await expect(page.locator('html')).toHaveClass(/dark/);
   await page.getByLabel('Bahasa').selectOption('en');
