@@ -48,3 +48,16 @@ Historic GitHub Actions successes belong to the previous npm-backed commits. The
 ## Additional local hardening verification
 
 Run `bun run contract:check` to validate OpenAPI schemas and customer field parity. New test specifications cover stale session races, 401 and backend recovery, blocked preference storage, request cancellation, cursor history and UiSelect ControlValueAccessor. These tests have not been executed for this branch in this environment. GitHub Actions remains disabled.
+
+## Local demo and dependency regression checks
+
+```sh
+bun install --frozen-lockfile
+bun run deps:check
+bun run demo:config:check
+bun run demo:test
+bunx playwright install chromium webkit
+bun run demo:e2e
+```
+
+The manifest and committed Bun lockfile must both resolve TypeScript 6.0.x with Angular 22. Major upgrades are blocked in Dependabot until reviewed. The demo browser suite uses the real **localhost-only** synthetic API, and never requires GitHub Actions. The browser tests and build in this branch have not been executed by the editing environment.
