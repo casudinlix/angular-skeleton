@@ -22,7 +22,8 @@
     "demo": "node scripts/check-angular-toolchain.mjs && node scripts/dev-demo.mjs",
     "demo:api": "node scripts/demo-api.mjs",
     "demo:test": "node --test scripts/demo-api.test.mjs",
-    "deps:check": "node scripts/check-angular-lock.mjs"
+    "deps:check": "node scripts/check-angular-lock.mjs",
+    "demo:e2e": "playwright test --config playwright.demo.config.ts"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
