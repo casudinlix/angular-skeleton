@@ -12,7 +12,7 @@
     "e2e": "playwright test",
     "i18n:check": "node scripts/validate-i18n.mjs",
     "structure:check": "node scripts/check-structure.mjs",
-    "quality": "bun run deps:check && bun run i18n:check && bun run structure:check && bun run layout:check && bun run contract:check && bun run lint && bun run test && bun run build",
+    "quality": "bun run deps:check && bun run demo:config:check && bun run i18n:check && bun run structure:check && bun run layout:check && bun run contract:check && bun run lint && bun run test && bun run build",
     "generate:feature": "node tools/generate-feature.mjs",
     "format:check": "prettier --check 'src/**/*.{ts,html,css,json}' 'tools/**/*.{mjs,cjs,json}'",
     "layout:check": "node scripts/check-layout.mjs",
@@ -23,7 +23,8 @@
     "demo:api": "node scripts/demo-api.mjs",
     "demo:test": "node --test scripts/demo-api.test.mjs",
     "deps:check": "node scripts/check-angular-lock.mjs",
-    "demo:e2e": "playwright test --config playwright.demo.config.ts"
+    "demo:e2e": "playwright test --config playwright.demo.config.ts",
+    "demo:config:check": "node scripts/check-demo-configuration.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
