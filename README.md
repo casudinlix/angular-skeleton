@@ -6,7 +6,7 @@ Reusable Angular 22 frontend foundation for enterprise admin panels. Includes st
 
 - **Bun 1.4.4** is the package manager and script runner.
 - Keep Node.js **22.22.3+**, or another Angular 22-compatible version, installed because Angular CLI still uses Node.js.
-- A real backend is needed for authenticated features (development proxy defaults to http://localhost:3000).
+- A real backend is needed for authenticated features under `bun start`. To explore without a backend, use the opt-in local demo (`bun run demo`).
 
 ### One-time migration from the legacy npm lockfile
 
@@ -26,7 +26,8 @@ After migrating, `bun.lock` is the **only** lockfile to commit. Do not recreate 
 
 ```bash
 bun install --frozen-lockfile
-bun run start
+bun run start   # connect to your real backend at 127.0.0.1:3000
+# or: bun run demo  # start standalone synthetic API + Angular demo together
 bun run i18n:check
 bun run structure:check
 bun run layout:check
@@ -85,3 +86,7 @@ Shared UI includes UiFormField, UiSelect ControlValueAccessor, UiDateTimeInputDi
 The default visual direction now draws from the team's `paper-ai-studio-billing` concept: dense operations toolbar, dark slate surfaces, cyan highlights, Plus Jakarta Sans, JetBrains Mono metadata, compact cards and a mobile drawer. This is a **styling adaptation**, not a port of the billing feature set. The first-visit theme is dark; saved theme preferences and light mode continue to work. See [Paper Visual System](docs/PAPER_VISUAL_SYSTEM.md).
 
 To inspect locally: `bun run start`. GitHub Actions remains disabled per repository policy.
+
+## Demo sample pages without a backend
+
+When the Vite proxy reports `ECONNREFUSED 127.0.0.1:3000`, Angular is running but its real backend is absent. Use **`bun run demo`** to launch a localhost-only synthetic session/customer API and Angular together. Sign in using `demo@example.test` / `demo12345`; the UI clearly displays a demo badge and the sample data is reset when stopped. Production and regular `bun start` do not enable mocks. Full details: [Local Demo API](docs/LOCAL_DEMO.md).

@@ -18,7 +18,10 @@
     "layout:check": "node scripts/check-layout.mjs",
     "lock:migrate": "bun install && node scripts/finalize-bun-migration.mjs",
     "contract:check": "node scripts/check-openapi.mjs",
-    "toolchain:check": "node scripts/check-angular-toolchain.mjs"
+    "toolchain:check": "node scripts/check-angular-toolchain.mjs",
+    "demo": "node scripts/check-angular-toolchain.mjs && node scripts/dev-demo.mjs",
+    "demo:api": "node scripts/demo-api.mjs",
+    "demo:test": "node --test scripts/demo-api.test.mjs"
   },
   "dependencies": {
     "@angular/common": "^22.0.0",
