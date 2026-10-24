@@ -102,3 +102,16 @@ test('demo cursor, search, local CSRF and CRUD use the reference API envelope', 
   const deleted = await fetch(base + '/api/customers/' + created.id, { headers: { Cookie: auth.jar } });
   assert.equal(deleted.status, 404);
 });
+
+test('rejects foreign Origin headers and accepts localhost browser requests', async t => {
+  const { base } = await fixture(t);
+  const denied = await fetch(base + '/api/session', {
+    headers: { Origin: 'https://untrusted.example' },
+  });
+  assert.equal(denied.status, 403);
+  assert.equal((await denied.json()).code, 'DEMO_LOCAL_ONLY');
+  const accepted = await fetch(base + '/api/session', {
+    headers: { Origin: 'http://localhost:4200' },
+  });
+  assert.equal(accepted.status, 401); // Local browser, no session.
+});
