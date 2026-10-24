@@ -7,6 +7,14 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Angular 22 only supports TypeScript 6.0.x. Review TypeScript majors
+      # together with an Angular major upgrade, never through grouped PRs.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      # Review ESLint core/config major compatibility as a separate change.
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
     groups:
       angular:
         patterns: ["@angular/*", "@angular-devkit/*", "angular-eslint"]

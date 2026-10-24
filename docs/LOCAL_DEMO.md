@@ -44,17 +44,20 @@ A 401 from `GET /api/session` without a session is **normal** (not a connection 
 
 ## Safety boundaries
 
-- The example backend binds **only 127.0.0.1**, never 0.0.0.0, and uses in-memory state.
+- The example backend binds **only 127.0.0.1**, never 0.0.0.0, and uses in-memory state. It rejects non-loopback Host headers and foreign browser Origin headers.
 - Demo credentials are public test credentials. Never use these credentials in any real system.
 - The mock cookie/XSRF checks demonstrate the frontend contract but are **not production session or tenant security**.
 - Angular's `demo` build configuration explicitly replaces `demo-mode.ts` with a demo-only flag. Default production and ordinary development keep that flag false.
 - No routes, authentication guards, API contract, or protected endpoints are bypassed. The mocked backend authenticates demo credentials before customer access.
 - The demo server is neither deployed nor copied into Angular browser output.
+- The `bun run demo` launcher forces Angular's host to `127.0.0.1:4200` and rejects extra CLI flags. It does not open demo credentials to the local network.
 - GitHub Actions remains disabled as requested. Run local checks only.
 
 ## Local verification
 
 ```sh
+bun run deps:check
+bun run demo:config:check
 bun run demo:test
 bun run toolchain:check
 bun run i18n:check
@@ -62,6 +65,16 @@ bun run structure:check
 bun run layout:check
 bun run lint
 bun run build
+bun run demo:e2e  # Starts a dedicated demo server; requires local Playwright browsers
 ```
 
 For UI browser checks, start `bun run demo` separately and use Playwright locally. Production backend integration and real-device QA are separate release gates.
+
+### Installing local browser engines
+
+```sh
+bunx playwright install chromium webkit
+bun run demo:e2e
+```
+
+The isolated test config deliberately refuses to reuse a running frontend. Stop a previous `bun start` / `bun run demo` before using `demo:e2e`. It verifies the actual local HTTP API rather than Playwright route mocks.

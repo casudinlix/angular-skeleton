@@ -8,19 +8,17 @@ Reusable Angular 22 frontend foundation for enterprise admin panels. Includes st
 - Keep Node.js **22.22.3+**, or another Angular 22-compatible version, installed because Angular CLI still uses Node.js.
 - A real backend is needed for authenticated features under `bun start`. To explore without a backend, use the opt-in local demo (`bun run demo`).
 
-### One-time migration from the legacy npm lockfile
+### Bun dependency compatibility
 
-The repository currently retains `package-lock.json` **only as an input to Bun's lockfile migration**. This environment cannot create a real `bun.lock`, because Bun and a package registry were unavailable. On your local machine:
+The repository already contains a real `bun.lock`. Keep it in sync with `package.json` and install via:
 
-```bash
-bun --version            # recommended: 1.4.4
-bun run lock:migrate     # bun install, create bun.lock, remove package-lock.json only after success
+```sh
 bun install --frozen-lockfile
-git add -A package.json bunfig.toml bun.lock package-lock.json
-git commit -m "build: complete Bun lockfile migration"
+bun run deps:check
+bun run toolchain:check
 ```
 
-After migrating, `bun.lock` is the **only** lockfile to commit. Do not recreate `package-lock.json` or install project dependencies using npm, yarn or pnpm. See [Bun's installation documentation](https://bun.com/docs/pm/cli/install).
+Angular 22 requires **TypeScript 6.0.x**. The pinned Bun dependency snapshot is restored to `typescript@6.0.3`. Dependabot must not upgrade TypeScript to 7 without an Angular compatibility review.
 
 ### Development and local verification
 
@@ -73,7 +71,7 @@ Read [Browser & Responsive Standards](docs/BROWSER_COMPATIBILITY.md). Cross-brow
 
 ## Readiness
 
-The previous skeleton has been merged to main. Hardening now lives on the separate branch `feat/enterprise-hardening-bun-auth-api`. Legacy npm lockfile migration to Bun remains **pending local execution**. No Bun install or tests have been executed for this package-manager change. Real backend session, CSRF, tenant isolation and permission tests are required before production deployment.
+A Bun lockfile is committed. Frontend dependency compatibility, smoke tests and browser E2E must be verified locally before merging the current changes. The sample/demo backend is never a substitute for production authentication, CSRF protection or tenant isolation.
 
 ## API reliability and reusable forms
 
@@ -90,3 +88,13 @@ To inspect locally: `bun run start`. GitHub Actions remains disabled per reposit
 ## Demo sample pages without a backend
 
 When the Vite proxy reports `ECONNREFUSED 127.0.0.1:3000`, Angular is running but its real backend is absent. Use **`bun run demo`** to launch a localhost-only synthetic session/customer API and Angular together. Sign in using `demo@example.test` / `demo12345`; the UI clearly displays a demo badge and the sample data is reset when stopped. Production and regular `bun start` do not enable mocks. Full details: [Local Demo API](docs/LOCAL_DEMO.md).
+
+## Local demo reliability and browser test
+
+- `bun start`: normal frontend, requires a real backend at `127.0.0.1:3000`.
+- `bun run demo`: loopback-only demo launcher. It refuses extra serve arguments (for example `--host 0.0.0.0`) so its public test credentials are not exposed on the LAN.
+- `bun run demo:config:check`: checks demo build isolation and proxy settings without running the frontend.
+- `bun run demo:test`: local Node integration checks, including rejection of foreign browser Origin headers.
+- `bun run demo:e2e`: locally starts the actual demo API and Angular and exercises login, cursor navigation, create/search and logout in Chromium and WebKit emulations. This **never** triggers GitHub Actions.
+
+The `deps:check` script protects the Angular 22/TypeScript 6 contract on both the manifest and Bun lockfile. See [Local Demo](docs/LOCAL_DEMO.md).

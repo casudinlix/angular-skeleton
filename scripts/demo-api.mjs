@@ -36,6 +36,18 @@ export function createDemoServer() {
     res.end(status === 204 ? undefined : JSON.stringify(value));
   }
   function failure(res, status, code, message) { json(res, status, { code, message }); }
+  function isLoopbackHost(value) {
+    return /^(?:localhost|127[.]0[.]0[.]1):[0-9]{1,5}$/.test(value ?? '');
+  }
+  function isTrustedBrowserOrigin(value) {
+    if (!value) return true; // Node/curl requests may omit Origin.
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' && url.port === '4200'
+        && (url.hostname === 'localhost' || url.hostname === '127.0.0.1');
+    } catch { return false; }
+  }
+
   function cookies(req) {
     const result = Object.create(null);
     for (const entry of (req.headers.cookie ?? '').split(';')) {
@@ -87,6 +99,12 @@ export function createDemoServer() {
   }
   const server = createServer(async (req, res) => {
     try {
+      // A local demo must reject hostile Host/Origin headers even if someone
+      // publishes the dev frontend through an unintended reverse proxy.
+      if (!isLoopbackHost(req.headers.host) ||
+          !isTrustedBrowserOrigin(req.headers.origin)) {
+        return failure(res, 403, 'DEMO_LOCAL_ONLY', 'Demo requests must originate from localhost');
+      }
       const url = new URL(req.url ?? '/', 'http://127.0.0.1');
       const path = url.pathname;
       const method = req.method ?? 'GET';

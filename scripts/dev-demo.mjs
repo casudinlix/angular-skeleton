@@ -2,6 +2,11 @@ import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 
+// Public demo credentials are never suitable for --host 0.0.0.0 or LAN use.
+if (process.argv.length > 2) {
+  console.error('[demo] Extra serve arguments are prohibited. Demo is localhost-only.');
+  process.exit(1);
+}
 const instanceId = randomUUID();
 const api = spawn(process.execPath, ['scripts/demo-api.mjs'], {
   stdio: 'inherit',
@@ -44,7 +49,7 @@ if (!ready) {
   console.log('[demo] Starting Angular in opt-in demo configuration...');
   angular = spawn(process.execPath, [
     'node_modules/@angular/cli/bin/ng.js', 'serve', '--configuration', 'demo',
-    ...process.argv.slice(2),
+    '--host', '127.0.0.1', '--port', '4200',
   ], { stdio: 'inherit' });
   angular.on('error', error => { console.error('[demo]', error.message); shutdown(); process.exitCode = 1; });
   angular.on('exit', (code, signal) => {
