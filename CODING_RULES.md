@@ -55,3 +55,11 @@
 - Only `bun run demo` may launch the loopback-only, ephemeral local demo API. Label demo screens and never ship mock users or records in production.
 - Maintain the demo endpoints aligned to `openapi/openapi.json`; keep cookie/XSRF behavior representative while documenting that it is not a production authentication service.
 - Do not run or enable GitHub Actions. Local `bun run demo:test` is permitted for verification.
+
+## Demo isolation and dependency compatibility
+
+- Angular 22 / TypeScript 6.0.x is a **hard compatibility constraint**. Restore only a real Bun-generated lockfile that matches package.json; do not hand edit its checksums. Run `bun run deps:check` before local builds.
+- Dependabot TypeScript **major** upgrades must remain ignored until the Angular major and peer compatibility are reviewed.
+- Only `bun run demo` launches the synthetic API. Both demo API and Angular dev host must remain bound to loopback; reject foreign Host/Origin. Public demo credentials must never be exposed on a LAN-facing dev server.
+- Keep demo file replacement isolated from production, verified through `bun run demo:config:check`.
+- Local demo integration and browser checks use `bun run demo:test` and `bun run demo:e2e`. No GitHub Actions.

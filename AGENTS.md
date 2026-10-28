@@ -37,3 +37,7 @@ Read `docs/PAPER_VISUAL_SYSTEM.md` before adding new UI modules. Maintain the co
 ## Local-only sample API
 
 Angular `bun start` proxies `/api` to a real backend at 127.0.0.1:3000. `ECONNREFUSED` means no backend is listening, not an Angular compilation error. For UI samples without a backend, run `bun run demo` to launch the standalone local synthetic backend. Read `docs/LOCAL_DEMO.md`. Demo must remain opt-in, bound to loopback, clearly labelled and excluded from production build. Never silently bypass auth/permissions, substitute fake data into real product endpoints, or enable CI.
+
+## Bun + demo regression prevention
+
+Pin Angular 22 to TypeScript 6.0.x in **both** package.json and bun.lock. Read `scripts/check-angular-lock.mjs`, and run `bun run deps:check`. Never merge grouped Dependabot upgrades that replace TypeScript 6 with 7. For the local API reference, `bun run demo` must bind both API and Angular only to localhost; never pass `--host 0.0.0.0`, bypass Host/Origin checks, or connect demo data to production. Run `bun run demo:config:check`, `bun run demo:test`, and optionally `bun run demo:e2e` locally. GitHub Actions stays disabled.
