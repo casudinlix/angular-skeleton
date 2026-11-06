@@ -53,7 +53,7 @@
     "@playwright/test": "^1.55.0",
     "eslint-config-prettier": "^10.1.0",
     "prettier": "^3.6.0",
-    "tailwindcss": "^4.1.0"
+    "tailwindcss": "^4.3.4"
   },
   "type": "module",
   "engines": {
